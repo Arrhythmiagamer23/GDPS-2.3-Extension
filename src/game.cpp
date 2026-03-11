@@ -716,8 +716,8 @@ class $modify(UILayerKeysExt, UILayer) {
 		this->schedule(schedule_selector(UILayerKeysExt::customUpdate));
 		return true;
 	};
-	void handleKeypress(cocos2d::enumKeyCodes key, bool p1) {
-		UILayer::handleKeypress(key, p1);
+	void handleKeypress(cocos2d::enumKeyCodes key, bool p1, double timestamp) {
+		UILayer::handleKeypress(key, p1, timestamp);
 
 		auto eventID = 120000 + (int)key;
 		m_gameLayer->gameEventTriggered((GJGameEvent)eventID, 0, 0);
