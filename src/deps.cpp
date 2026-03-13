@@ -91,7 +91,7 @@ class $modify(NodeVisitController, CCNode) {
 		};
 #undef repl
 	}
-	$override void addChild(CCNode * child, int zOrder, int tag) {
+	void addChild(CCNode * child, int zOrder, int tag) {
 		if (!child) return;
 		CCNode::addChild(child, zOrder, tag);
 		if (Ref node = typeinfo_cast<CCLabelBMFont*>(this)) {
@@ -120,7 +120,7 @@ class $modify(NodeVisitController, CCNode) {
 			Ref((NodeVisitController*)child)->replaceColors();
 		}
 	}
-	$override void visit() {
+	void visit() {
 		Ref(this)->replaceColors();
 		CCNode::visit();
 	}

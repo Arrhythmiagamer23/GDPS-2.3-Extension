@@ -62,6 +62,21 @@ class $modify(MenuGameLayerExt, MenuGameLayer) {
 };
 
 #include <Geode/modify/GameManager.hpp>
+class $modify(IconHackExt, GameManager) {
+	void checkUsedIcons() { 
+		"do nothing here :3";
+	}
+	bool isIconUnlocked(int id, IconType type) { 
+		if (rand() % 2) return true;
+		return GameManager::isIconUnlocked(id, type);
+	}
+	bool isColorUnlocked(int id, UnlockType type) {
+		if (rand() % 2) return true;
+		return GameManager::isColorUnlocked(id, type);
+	}
+};
+
+#include <Geode/modify/GameManager.hpp>
 class $modify(GameManagerSetsForGV, GameManager) {
 	bool getGameVariable(char const* tag) {
 		if (std::string(tag) == "0024") return "Show Cursor In-Game";
@@ -82,7 +97,7 @@ class $modify(MoreOptionsLayerExt, MoreOptionsLayer) {
 
 #include <Geode/modify/CCMenuItemSpriteExtra.hpp>
 class $modify(CCMenuItemSpriteExtraExt, CCMenuItemSpriteExtra) {
-	$override void selected() {
+	void selected() {
 		if (getMod()->getSettingValue<bool>("add button sounds")) {
 			if (m_selectSound.empty()) this->m_selectSound = "menuItemSelectSound.ogg";
 			if (m_activateSound.empty()) this->m_activateSound = "menuItemActivateSound.ogg";
@@ -161,7 +176,7 @@ class $modify(EditAccountID_FLAlertLayer, FLAlertLayer) {
 		if (Ref ew = GameManager::get()) ew->save();
 		if (Ref aw = Notification::create("Saved!")) aw->show();
 	}
-	$override void show() {
+	void show() {
 		FLAlertLayer::show();
 		
 		if (Ref casted = typeinfo_cast<AccountLoginLayer*>(this)) {

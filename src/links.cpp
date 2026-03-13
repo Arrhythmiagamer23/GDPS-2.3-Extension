@@ -33,7 +33,7 @@ class $modify(CCHttpClientLinksReplace, CCHttpClient) {
 //url open
 #include <Geode/modify/CCApplication.hpp>
 class $modify(CCApplicationLinksReplace, CCApplication) {
-	$override void openURL(const char* psz) {
+	void openURL(const char* psz) {
 		std::string url = psz;
 		url = not links.contains(url) ? url : links[url].asString().unwrapOr(url);
 		if (getMod()->getSettingValue<bool>("redir request urls")) {
