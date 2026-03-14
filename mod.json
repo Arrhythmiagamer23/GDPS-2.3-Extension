@@ -8,9 +8,9 @@
 		"ios": "2.2081"
 	},
 	"id": "_lil2kki.remina",
-	"name": "\u0000",
+	"name": "2.3 Features",
 	"version": "v0.0.0-alpha.1",
-	"developers": [ "\u0000" ],
+	"developers": [ "user95401" ],
 	"description": "remina.bccst.ru",
 	"links": {
 		"source": "https://github.com/lil2kki/REMINA",
@@ -54,13 +54,13 @@
 			"default": true
 		},
 		"add button sounds": {
-			"name": "add button sounds",
+			"name": "button sounds",
 			"description": "add sounds to buttons that don't have them",
 			"type": "bool",
 			"default": true
 		},
 		"leave labels alone you dumb bitch": {
-			"name": "leave labels alone you dumb bitch",
+			"name": "don't break labels you genius",
 			"description": "she will see and stop breaking the labels. what is she even trying to say?",
 			"type": "bool",
 			"default": false
