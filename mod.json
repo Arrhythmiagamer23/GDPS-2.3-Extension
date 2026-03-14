@@ -41,23 +41,12 @@
 			]
 		}
 	},
-	"api": {
-		"include": [
-			"resources/**/**/*.*"
-		]
-	},
 	"settings": {
 		"redir request urls": {
 			"name": "redir request urls",
 			"description": "replace boomlings.com/database with the our server url in all requests",
 			"type": "bool",
-			"default": true
-		},
-		"add button sounds": {
-			"name": "button sounds",
-			"description": "add sounds to buttons that don't have them",
-			"type": "bool",
-			"default": true
+			"default": false
 		},
 		"leave labels alone you dumb bitch": {
 			"name": "don't break labels you genius",
