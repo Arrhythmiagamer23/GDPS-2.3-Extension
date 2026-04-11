@@ -3,19 +3,6 @@
 #include <user95401.game-objects-factory/include/main.hpp>
 #include <user95401.game-objects-factory/include/impl.hpp>
 
-#include <Geode/modify/GJGameLoadingLayer.hpp>
-class $modify(GJGameLoadingLayerFuckYouuu, GJGameLoadingLayer) {
-	static GJGameLoadingLayer* transitionToLoadingLayer(GJGameLevel * level, bool editor) {
-		Ref layer = EditLevelLayer::create(level);
-		switchToScene(layer);
-		if (CCKeyboardDispatcher::get()->getControlKeyPressed()) {
-			utils::clipboard::write(level->m_levelString);
-			Notification::create("Level string copied.")->show();
-		}
-		return nullptr;
-	}
-};
-
 void SetupObjects();
 $on_mod(Loaded) { SetupObjects(); }
 inline void SetupObjects() {
@@ -243,6 +230,60 @@ inline void SetupObjects() {
 	);
 	svcondtrigger->registerMe();
 
+	GameObjectsFactory::createObjectConfig(UNIQ_ID("player1-model"), "player1-model.png")
+		->tab(6)->resetObject(
+			[](GameObject* a) {
+				a->removeAllChildrenWithCleanup(false);
+				Ref g = GameManager::get()->m_gameLayer;
+				if (!g) return;
+				Ref player = g->m_player1;
+				if (!player) return;
+				Ref layer = player->m_mainLayer;
+				if (layer) {
+					if (!a->m_hasNoEffects) layer->removeFromParentAndCleanup(false);
+					a->addChild(layer);
+					if (!a->m_hasNoEffects) player->addChild(layer); //!!!
+				}
+			}
+		)->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+				a->m_objectType = GameObjectType::Decoration;
+				a->m_isDecoration = true;
+				a->m_isDecoration2 = true;
+				a->setDisplayFrame(a->m_editorEnabled ?
+					a->displayFrame() : CCSprite::createWithSpriteFrameName("30x30empty.png")->displayFrame()
+				);
+			}
+		)->registerMe();
+
+	GameObjectsFactory::createObjectConfig(UNIQ_ID("player2-model"), "player2-model.png")
+		->tab(6)->resetObject(
+			[](GameObject* a) {
+				a->removeAllChildrenWithCleanup(false);
+				Ref g = GameManager::get()->m_gameLayer;
+				if (!g) return;
+				Ref player = g->m_player2;
+				if (!player) return;
+				Ref layer = player->m_mainLayer;
+				if (layer) {
+					if (!a->m_hasNoEffects) layer->removeFromParentAndCleanup(false);
+					a->addChild(layer);
+					if (!a->m_hasNoEffects) player->addChild(layer); //!!!
+				}
+			}
+		)->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+				a->m_objectType = GameObjectType::Decoration;
+				a->m_isDecoration = true;
+				a->m_isDecoration2 = true;
+				a->setDisplayFrame(a->m_editorEnabled ?
+					a->displayFrame() : CCSprite::createWithSpriteFrameName("30x30empty.png")->displayFrame()
+				);
+			}
+		)->registerMe();
+
 	GameObjectsFactory::createTriggerConfig(UNIQ_ID("plr-tw-upd"), "plr-tw-upd.png")
 		->refID(1935)->insertIndex((12 * 5) + 5)->triggerObject(
 			[](EffectGameObject* ob, GJBaseGameLayer* g, int, gd::vector<int> const*) {
@@ -371,6 +412,206 @@ inline void SetupObjects() {
 		}
 	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-spider-teleport"), "plr-spider-teleport.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->spiderTestJump(true);
+			if (auto a = game->m_player2) a->spiderTestJump(true);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-ship-mode"), "plr-ship-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleFlyMode(true, false);
+			if (auto a = game->m_player2) a->toggleFlyMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-ball-mode"), "plr-ball-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleRollMode(true, false);
+			if (auto a = game->m_player2) a->toggleRollMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-ufo-mode"), "plr-ufo-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleBirdMode(true, false);
+			if (auto a = game->m_player2) a->toggleBirdMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-wave-mode"), "plr-wave-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleDartMode(true, false);
+			if (auto a = game->m_player2) a->toggleDartMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-robot-mode"), "plr-robot-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleRobotMode(true, false);
+			if (auto a = game->m_player2) a->toggleRobotMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-spider-mode"), "plr-spider-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleSpiderMode(true, false);
+			if (auto a = game->m_player2) a->toggleSpiderMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-swing-mode"), "plr-swing-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleSwingMode(true, false);
+			if (auto a = game->m_player2) a->toggleSwingMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftwide"),
+        "crystal_leftwidebottom_01_001.png", "crystal_leftwidetop_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftnarrow"),
+        "crystal_leftbottom_01_001.png", "crystal_lefttop_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftoutline"), "crystal_leftoutline_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_middle"),
+        "crystal_midbottom_01_001.png", "crystal_midtop_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rightwide"),
+        "crystal_rightwidebottom_01_001.png", "crystal_rightwidetop_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_platform"),
+        "crystal_platbottom_01_001.png", "crystal_plattop_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_platwall"), "crystal_platwall_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_platwallend"), "crystal_platwallend_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_platwallendoutline"), "crystal_platwallendoutline_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_platwall"), "crystal_platwall_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_wall"), "crystal_wall_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_wallnarrow"), "crystal_wallnarrow_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_wallnarrowoutline"), "crystal_wallnarrowoutline_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_walloutline"), "crystal_walloutline_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_deco"),
+        "crystaldeco_01_001.png", "crystaldeco_02_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_deco2"), "crystaldeco2_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_deco3"), "crystaldeco3_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_deco4"), "crystaldeco4_01_001.png")->registerMe();
+	
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rock"),
+        "crystalrock_01_001.png", "crystalrock_02_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("firepillar1"),
+        "firepillar_01_001.png", "firepillar_01_color_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("firepillar1"),
+        "firepillar_01_002.png", "firepillar_01_color_002.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_flower"), "flowerfloral_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mossbranch"), "mossbranch_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mud1"), "mud_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mud2"), "mud_02_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mudground"), "mudground_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mudgrass1"), "mudgrass_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mudgrass2"), "mudgrass_02_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebbles1"), "pebbles_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebbles2"), "pebbles_02_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebblesleft1"), "pebblesleft_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebblesleft2"), "pebblesleft_02_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebblesright1"), "pebblesright_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebblesright2"), "pebblesright_02_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimegroundleft"), "slimegroundleft_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimeground"), "slimeground_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimegroundoutline"), "slimegroundoutline_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimegroundright"), "slimegroundright_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimeleft"), "slimeleft_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimeright"), "slimeright_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel1"), "spinpanel_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel2"), "spinpanel_02_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel3"), "spinpanel_03_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel4"), "spinpanel_04_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel5"), "spinpanel_05_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel6"), "spinpanel_06_001.png")->registerMe();
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("crookedrays"), "crookedrays_01_001.png",
+        [](void*) { log::info("setup"); }
+    ));
+	
+    GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("mediumrays"), "medraysnew_01_001.png",
+        [](void*) { log::info("setup"); }
+    ));
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("viceversa-spiderring"),
+            "viceversa_spiderRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->spiderTestJump(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )
+    );
 
 	GameObjectsFactory::createTriggerConfig(
 		UNIQ_ID("custom-shader"), "edit_eShaderBtn_001.png",
@@ -729,8 +970,46 @@ class $modify(UILayerKeysExt, UILayer) {
 	}
 };
 
+#include <Geode/modify/GJBaseGameLayer.hpp>
+class $modify(EventsExt, GJBaseGameLayer) {
+	inline static int _s = 78;
+	inline static int OnForce = _s + 1;
+	inline static int OnSpeedModifer = _s + 2;
+	inline static int OnInverted = _s + 3;
+	inline static int OnUninverted = _s + 4;
+	inline static int CollisionTop = _s + 5;
+	inline static int CollisionBottom = _s + 6;
+	inline static int CollisionLeft = _s + 7;
+	inline static int CollisionRight = _s + 8;
+	static gd::string gameEventToString(GJGameEvent event) {
+		auto id = (int)event;
+		if (id == OnForce) return "NO IMPL'// On Force";
+		if (id == OnSpeedModifer) return "NO IMPL'//On Speed Modifer";
+		if (id == OnInverted) return "NO IMPL'//On Inverted";
+		if (id == OnUninverted) return "NO IMPL'//On Un-inverted";
+		if (id == CollisionTop) return "NO IMPL'//Collision Top";
+		if (id == CollisionBottom) return "NO IMPL'//Collision Bottom";
+		if (id == CollisionLeft) return "NO IMPL'//Collision Left";
+		if (id == CollisionRight) return "NO IMPL'//Collision Right";
+		return GJBaseGameLayer::gameEventToString(event);
+	}
+};
+
 #include <Geode/modify/SelectEventLayer.hpp>
 class $modify(SelectEventLayerKeysExt, SelectEventLayer) {
+	void addToggle(int id, gd::string info) {
+		SelectEventLayer::addToggle(id, info);
+		if (id != 78) return;
+		//wth... static gd::string GJBaseGameLayer::gameEventToString(GJGameEvent event);
+		SelectEventLayer::addToggle(EventsExt::OnForce, "Activate a group when touching a force block");
+		SelectEventLayer::addToggle(EventsExt::OnSpeedModifer, "Activate a group when touching any speed modifer");
+		SelectEventLayer::addToggle(EventsExt::OnInverted, "Activate a group when camera is reverted");
+		SelectEventLayer::addToggle(EventsExt::OnUninverted, "Activate a group when camera is reverted");
+		SelectEventLayer::addToggle(EventsExt::CollisionTop, "Activate a group when player update collision in top direction");
+		SelectEventLayer::addToggle(EventsExt::CollisionBottom, "Activate a group when player update collision in bottom direction");
+		SelectEventLayer::addToggle(EventsExt::CollisionLeft, "Activate a group when player update collision in left direction");
+		SelectEventLayer::addToggle(EventsExt::CollisionRight, "Activate a group when player update collision in right direction");
+	}
 	bool init(SetupEventLinkPopup * p0, gd::set<int>&p1) {
 		if (!SelectEventLayer::init(p0, p1)) return false;
 
@@ -790,6 +1069,98 @@ class $modify(SelectEventLayerKeysExt, SelectEventLayer) {
 		Ref(this)->m_buttonMenu->addChild(keyEventsExpandBtn);
 
 		return true;
+	}
+};
+
+
+#include <Geode/modify/LevelEditorLayer.hpp>
+class $modify(LevelEditorLayerExt, LevelEditorLayer) {
+	void onPlaytest() {
+		LevelEditorLayer::onPlaytest();
+	}
+	virtual void playerTookDamage(PlayerObject * player) {
+		player->playDeathEffect();
+		LevelEditorLayer::playerTookDamage(player);
+	}
+};
+
+#include <Geode/modify/GJBaseGameLayer.hpp>
+class $modify(GJBaseGameLayerExt, GJBaseGameLayer) {
+	void resetPlayer() {
+		GJBaseGameLayer::resetPlayer();
+		for (auto p : { this->m_player1, this->m_player2 }) {
+			if (p) p->m_customScaleX = 1.f;
+			if (p) p->m_customScaleY = 1.f;
+		}
+	}
+};
+
+#include <Geode/modify/PlayerObject.hpp>
+class $modify(PlayerObjectExt, PlayerObject) {
+	void updateCollide(PlayerCollisionDirection direction, GameObject * object) {
+		PlayerObject::updateCollide(direction, object);
+		if (auto a = m_gameLayer) a->gameEventTriggered(
+			(GJGameEvent)(EventsExt::CollisionTop + (int)direction), 
+			0, 1 + a->m_player2 == this
+		);
+	};
+	//bool collidedWithObject(float dt, GameObject* object, cocos2d::CCRect rect, bool skipCheck) {};
+	bool init(int p0, int p1, GJBaseGameLayer * p2, cocos2d::CCLayer * p3, bool p4) {
+		if (!PlayerObject::init(p0, p1, p2, p3, p4)) return false;
+
+		queueInMainThread(
+			[_this = Ref(this), p2 = Ref(p2)] {
+				if (!typeinfo_cast<LevelEditorLayer*>(p2.data())) return;
+				if (_this == p2->m_player1) _this->addAllParticles();
+				if (_this == p2->m_player2) _this->addAllParticles();
+			}
+		);
+
+		return true;
+	}
+	void resetObject() {
+		PlayerObject::resetObject();
+		setVisible(1);
+		m_customScaleY = 1.f;
+		m_customScaleX = 1.f;
+	}
+	void resetPlayerIcon() {
+		PlayerObject::resetPlayerIcon();
+	}
+	void update(float p0) {
+		PlayerObject::update(p0 * (m_customScaleY > 0.001 ? m_customScaleY : 1.f));
+	}
+	void updateRotation(float p0) {
+		PlayerObject::updateRotation(p0 * (m_customScaleX > 0.001 ? m_customScaleX : 1.f));
+	}
+};
+
+
+#include <Geode/modify/EffectGameObject.hpp>
+class $modify(EffectGameObjectExt, EffectGameObject) {
+	void customSetup() {
+		EffectGameObject::customSetup();
+	}
+	void triggerActivated(float p0) {
+		EffectGameObject::triggerActivated(p0);
+	}
+	void triggerObject(GJBaseGameLayer * p0, int p1, gd::vector<int> const* p2) {
+		if (m_objectID == 1613 or m_objectID == 1612) {
+			if (m_hasNoEffects) {
+				//show fully
+				auto oldid = m_objectID;
+				m_objectID = 1613;
+				EffectGameObject::triggerObject(p0, p1, p2);
+				m_objectID = oldid;
+				//hide as node
+				for (auto p : { p0->m_player1, p0->m_player2 }) if (p) {
+					p->setVisible(m_objectID == 1613); //is show?
+				}
+				if (m_objectID == 1612) return; //no default hide beh
+			}
+			for (auto p : { p0->m_player1, p0->m_player2 }) p->setVisible(1);
+		}
+		EffectGameObject::triggerObject(p0, p1, p2);
 	}
 };
 
@@ -1000,57 +1371,5 @@ class $modify(TextGameObjectImageExt, TextGameObject) {
 		TextGameObject::updateTextObject(p0, p1);
 		if (this) unschedule(schedule_selector(TextGameObjectImageExt::trySetupCustomSprite));
 		if (this) scheduleOnce(schedule_selector(TextGameObjectImageExt::trySetupCustomSprite), 0.01f);
-	}
-};
-
-
-#include <Geode/modify/LevelEditorLayer.hpp>
-class $modify(LevelEditorLayerExt, LevelEditorLayer) {
-	void onPlaytest() {
-		LevelEditorLayer::onPlaytest();
-	}
-	virtual void playerTookDamage(PlayerObject * player) {
-		player->playDeathEffect();
-		LevelEditorLayer::playerTookDamage(player);
-	}
-};
-
-
-#include <Geode/modify/GJBaseGameLayer.hpp>
-class $modify(GJBaseGameLayerExt, GJBaseGameLayer) {
-	void resetPlayer() {
-		GJBaseGameLayer::resetPlayer();
-		for (auto p : { this->m_player1, this->m_player2 }) {
-			if (p) p->m_customScaleX = 1.f;
-			if (p) p->m_customScaleY = 1.f;
-		}
-	}
-};
-
-#include <Geode/modify/PlayerObject.hpp>
-class $modify(PlayerObjectExt, PlayerObject) {
-	bool init(int p0, int p1, GJBaseGameLayer * p2, cocos2d::CCLayer * p3, bool p4) {
-		if (!PlayerObject::init(p0, p1, p2, p3, p4)) return false;
-
-		queueInMainThread(
-			[_this = Ref(this), p2 = Ref(p2)] {
-				if (!typeinfo_cast<LevelEditorLayer*>(p2.data())) return;
-				if (_this == p2->m_player1) _this->addAllParticles();
-				if (_this == p2->m_player2) _this->addAllParticles();
-			}
-		);
-
-		return true;
-	}
-	void resetPlayerIcon() {
-		PlayerObject::resetPlayerIcon();
-		m_customScaleY = 1.f;
-		m_customScaleX = 1.f;
-	}
-	void update(float p0) {
-		PlayerObject::update(p0 * (m_customScaleY > 0.001 ? m_customScaleY : 1.f));
-	}
-	void updateRotation(float p0) {
-		PlayerObject::updateRotation(p0 * (m_customScaleX > 0.001 ? m_customScaleX : 1.f));
 	}
 };
