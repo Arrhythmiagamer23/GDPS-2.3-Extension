@@ -492,6 +492,74 @@ inline void SetupObjects() {
 		}
 	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-mini-size"), "plr-mini-size.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->togglePlayerScale(a->m_vehicleSize = 0.6f, true);
+			if (auto a = game->m_player2) a->togglePlayerScale(a->m_vehicleSize = 0.6f, true);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-normal-size"), "plr-normal-size.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->togglePlayerScale(a->m_vehicleSize != 0.6f, true);
+			if (auto a = game->m_player2) a->togglePlayerScale(a->m_vehicleSize != 0.6f, true);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-fakecrash"), "plr-fakecrash.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->playDeathEffect();
+			if (auto a = game->m_player2) a->playDeathEffect();
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-mirror"), "plr-mirror.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->levelWillFlip();
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-lightning"), "plr-lightning.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->spawnScaleCircle();
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-accelerate"), "plr-accelerate.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->speedUp();
+			if (auto a = game->m_player2) a->speedUp();
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-deaccelerate"), "plr-deaccelerate.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->speedDown();
+			if (auto a = game->m_player2) a->speedDown();
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftwide"),
         "crystal_leftwidebottom_01_001.png", "crystal_leftwidetop_01_001.png")->registerMe();
 
@@ -525,6 +593,10 @@ inline void SetupObjects() {
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_walloutline"), "crystal_walloutline_01_001.png")->registerMe();
 
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_bottom"), "crystal_bottom_01_001.png")->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_corner"), "crystal_corner_01_001.png")->registerMe();
+
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_deco"),
         "crystaldeco_01_001.png", "crystaldeco_02_001.png")->registerMe();
 
@@ -540,7 +612,7 @@ inline void SetupObjects() {
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("firepillar1"),
         "firepillar_01_001.png", "firepillar_01_color_001.png")->registerMe();
 
-	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("firepillar1"),
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("firepillar2"),
         "firepillar_01_002.png", "firepillar_01_color_002.png")->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_flower"), "flowerfloral_01_001.png")->registerMe();
