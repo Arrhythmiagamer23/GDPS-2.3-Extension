@@ -1,4 +1,4 @@
-## GDPS 2.3 - A fork of Remina GDPS but with more features
+## 2.3 Features for GDPS - A fork of Remina GDPS mod but with more features to use for your GDPS
 This GDPS is full of 2.3 features by fans and they are ported to this GDPS coming soon!
 You can create anything in part of game engineering.
 
