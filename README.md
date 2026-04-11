@@ -10,4 +10,5 @@ Here's the features:
 
 ### Credits:
 RoadHogStudios: Lead Developer and Modifier of Remina GDPS mod.
-Lil2kki: Remina GDPS mod.
+Lil2kki: Remina GDPS mod owner.
+GDL7u7: New decoration Textures for objects.
