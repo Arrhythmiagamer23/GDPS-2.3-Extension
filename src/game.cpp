@@ -497,16 +497,6 @@ inline void SetupObjects() {
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
 		{
 			if (!game) return;
-			if (auto a = game->m_player1) a->togglePlayerScale(a->m_vehicleSize = 0.6f, true);
-			if (auto a = game->m_player2) a->togglePlayerScale(a->m_vehicleSize = 0.6f, true);
-		}
-	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
-
-	GameObjectsFactory::createTriggerConfig(
-		UNIQ_ID("plr-normal-size"), "plr-normal-size.png",
-		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
-		{
-			if (!game) return;
 			if (auto a = game->m_player1) a->togglePlayerScale(a->m_vehicleSize != 0.6f, true);
 			if (auto a = game->m_player2) a->togglePlayerScale(a->m_vehicleSize != 0.6f, true);
 		}
@@ -523,40 +513,82 @@ inline void SetupObjects() {
 	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createTriggerConfig(
-		UNIQ_ID("plr-mirror"), "plr-mirror.png",
+		UNIQ_ID("plr-speed2"), "plr-speed-normal.png",
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
 		{
 			if (!game) return;
-			if (auto a = game->m_player1) a->levelWillFlip();
+			if (auto a = game->m_player1) a->m_playerSpeed = 0.9f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 0.9f;
 		}
 	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createTriggerConfig(
-		UNIQ_ID("plr-lightning"), "plr-lightning.png",
+		UNIQ_ID("plr-speed-slow"), "plr-speed-slow.png",
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
 		{
 			if (!game) return;
-			if (auto a = game->m_player1) a->spawnScaleCircle();
+			if (auto a = game->m_player1) a->m_playerSpeed = 0.7f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 0.7f;
 		}
 	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createTriggerConfig(
-		UNIQ_ID("plr-accelerate"), "plr-accelerate.png",
+		UNIQ_ID("plr-speed-superslow"), "plr-speed-superslow.png",
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
 		{
 			if (!game) return;
-			if (auto a = game->m_player1) a->speedUp();
-			if (auto a = game->m_player2) a->speedUp();
+			if (auto a = game->m_player1) a->m_playerSpeed = 0.5f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 0.5f;
 		}
 	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createTriggerConfig(
-		UNIQ_ID("plr-deaccelerate"), "plr-deaccelerate.png",
+		UNIQ_ID("plr-speed-double"), "plr-speed-double.png",
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
 		{
 			if (!game) return;
-			if (auto a = game->m_player1) a->speedDown();
-			if (auto a = game->m_player2) a->speedDown();
+			if (auto a = game->m_player1) a->m_playerSpeed = 1.1f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 1.1f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-triple"), "plr-speed-triple.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 1.3f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 1.3f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-quadruple"), "plr-speed-quadruple.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 1.6f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 1.6f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-quintuple"), "plr-speed-quintuple.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 2.0f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 2.0f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-pause"), "plr-speed-pause.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 0.0f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 0.0f;
 		}
 	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
