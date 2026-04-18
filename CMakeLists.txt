@@ -27,6 +27,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE 
+-Wno-implicit-const-int-float-conversion 
 -Wno-undefined-bool-conversion
 )
 
