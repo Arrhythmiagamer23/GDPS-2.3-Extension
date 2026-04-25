@@ -127,12 +127,12 @@ inline void createDialogTrigger() {
             }
         }
     )->customSetup(
-        [](GameObject* a)
+        [](GameObject* object)
         {
-            if (a) a->m_addToNodeContainer = true;
+            if (object) object->m_addToNodeContainer = true;
             auto data = CCNode::create();
-            a->setUserObject("data"_spr, data);
-            return a;
+            object->setUserObject("data"_spr, data);
+            return object;
         }
     )->saveString(
         [](std::string str, GameObject* object, GJBaseGameLayer* level)
