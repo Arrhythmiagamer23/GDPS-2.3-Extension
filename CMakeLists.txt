@@ -18,7 +18,6 @@ download_dependency_mod(lil2kki/geode-game-objects-factory user95401.game-object
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCES})
-    src/main.cpp
 include_directories(src)
 
 # httplib idi nahui
