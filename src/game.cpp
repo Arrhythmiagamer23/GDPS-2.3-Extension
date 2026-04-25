@@ -712,6 +712,223 @@ inline void SetupObjects() {
         [](GameObject* a) { a->m_addToNodeContainer = true; }
     ));
 
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("bigsaw1"), "bigsaw1.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("metalsaw1"), "metalsaw1.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco1"), "rotdeco1.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco2"), "rotdeco2.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco3"), "rotdeco3.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco4"), "rotdeco4.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco5"), "rotdeco5.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco6"), "rotdeco6.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco7"), "rotdeco7.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco8"), "rotdeco8.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco9"), "rotdeco9.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco10"), "rotdeco10.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco11"), "rotdeco11.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco12"), "rotdeco12.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco13"), "rotdeco13.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco14"), "rotdeco14.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco15"), "rotdeco15.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco16"), "rotdeco16.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco17"), "rotdeco17.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco18"), "rotdeco18.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco19"), "rotdeco19.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco20"), "rotdeco20.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("lightray1"), "lightray1.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("lightray2"), "lightray2.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("clockdeco1"), "clockdeco1.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("clockdeco2"), "clockdeco2.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("mushroomdeco1"), "mushroomdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("mushroomdeco2"), "mushroomdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("bushdeco1"), "bushdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("bushdeco2"), "bushdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("treedeco1"), "treedeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("treedeco2"), "treedeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("rockdeco1"), "rockdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("signdeco1"), "signdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("signdeco2"), "signdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("cratedeco1"), "cratedeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("barreldeco1"), "barreldeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("barreldeco2"), "barreldeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("loopdeco"), "loopdeco.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("loopdeco2"), "loopdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-ghost"), "monster-ghost.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-slider"), "monster-slider.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-slidechomper"), "monster-slidechomper.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-round"), "monster-round.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-bush"), "monster-bush.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-cactus"), "monster-cactus.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("pharaohdeco1"), "pharaohdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco1"), "radiodeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco2"), "radiodeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco3"), "radiodeco3.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco4"), "radiodeco4.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco5"), "radiodeco5.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco6"), "radiodeco6.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco7"), "radiodeco7.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco1"), "snowdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco2"), "snowdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco3"), "snowdeco3.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco4"), "snowdeco4.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco5"), "snowdeco5.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco6"), "snowdeco6.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco7"), "snowdeco7.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowsignq"), "snowsignq.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowsignskull"), "snowsignskull.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("paneldeco1"), "paneldeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("paneldeco2"), "paneldeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tombdoordeco1"), "tombdoordeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("vasedeco1"), "vasedeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("vasedeco1"), "vasedeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("chestdeco1"), "chestdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("flamebarreldeco1"), "flamebarreldeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
 	GameObjectsFactory::registerGameObject(
         GameObjectsFactory::createRingConfig(
             UNIQ_ID("viceversa-spiderring"),
@@ -726,8 +943,36 @@ inline void SetupObjects() {
 		)
     );
 
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("minirring"),
+            "miniRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->togglePlayerScale(plr->m_vehicleSize != 0.6f, true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("deathrring"),
+            "deathRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->playerDestroyed(false);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
 	GameObjectsFactory::createTriggerConfig(
-		UNIQ_ID("custom-shader"), "edit_eShaderBtn_001.png",
+		UNIQ_ID("custom-shader"), "edit_eShaderCustomBtn_001.png",
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
 		{
 			auto url = trigger->m_particleString.c_str();
