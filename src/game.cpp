@@ -1,4 +1,10 @@
+#include <Geode/Geode.hpp>
+#include <Geode/ui/GeodeUI.hpp>
+using namespace geode::prelude;
+
 #include <.hpp>
+
+#include <regex>
 
 #include <user95401.game-objects-factory/include/main.hpp>
 #include <user95401.game-objects-factory/include/impl.hpp>
@@ -929,6 +935,62 @@ inline void SetupObjects() {
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("flamebarreldeco1"), "flamebarreldeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco1"), "circusdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco2"), "circusdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco3"), "circusdeco3.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco4"), "circusdeco4.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco5"), "circusdeco5.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco6"), "circusdeco6.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco7"), "circusdeco7.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco8"), "circusdeco8.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco9"), "circusdeco9.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco10"), "circusdeco10.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco11"), "circusdeco11.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco12"), "circusdeco12.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco13"), "circusdeco13.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco14"), "circusdeco14.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco15"), "circusdeco15.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco1"), "hallowdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco2"), "hallowdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco3"), "hallowdeco3.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco4"), "hallowdeco4.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco5"), "hallowdeco5.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco6"), "hallowdeco6.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco7"), "hallowdeco7.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco8"), "hallowdeco8.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco9"), "hallowdeco9.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco10"), "hallowdeco10.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco11"), "hallowdeco11.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco12"), "hallowdeco12.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("barreldeco3"), "barreldeco3.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
 	GameObjectsFactory::registerGameObject(
         GameObjectsFactory::createRingConfig(
             UNIQ_ID("viceversa-spiderring"),
@@ -1080,7 +1142,7 @@ void main() {
 				CCShaderCache::sharedShaderCache()->addProgram(program, url.c_str());
 			}
 		}
-	)->registerMe();
+	)->customSetup([](GameObject* a) { if (a) a->m_addToNodeContainer = true; });
 }
 
 #include <Geode/modify/EffectGameObject.hpp>
