@@ -2,6 +2,8 @@
 #include <Geode/ui/GeodeUI.hpp>
 using namespace geode::prelude;
 
+#include <Geode/modify/GameManager.hpp>
+
 #include <.hpp>
 
 #include <regex>
@@ -709,6 +711,49 @@ inline void SetupObjects() {
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel5"), "spinpanel_05_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel6"), "spinpanel_06_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block"), "tig2block.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike"), "tig2spike.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2platform"), "tig2platform.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2blockboss"), "tig2block-horizontal.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-red"), "tig2block-red.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-redoutline"), "tig2block-redoff.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-blue"), "tig2block-blue.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-blueoutline"), "tig2block-blueoff.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-red"), "tig2spike-red.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-redoutline"), "tig2spike-redoff.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-blue"), "tig2spike-blue.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-blueoutline"), "tig2spike-blueoff.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2steel"), "tig2steel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2arrow"), "tig2arrow.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("tig2saw"), "tig2saw.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("tig2saw-medium"), "tig2saw-medium.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("tig2saw-big"), "tig2saw-big.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
 
 	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
         UNIQ_ID("crooked_rays"), "crookedrays_01_001.png",
