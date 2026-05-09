@@ -9,7 +9,7 @@
 	},
 	"id": "roadhogstudios.reminafeatures",
 	"name": "2point3 Features",
-	"version": "v1.2.0",
+	"version": "v1.3.0",
 	"developers": [ "lil2kki", "roadhogstudios" ],
 	"description": "remina.bccst.ru",
 	"links": {
@@ -32,6 +32,9 @@
 		}
 	},
 	"resources": {
+		"sprites": [
+			"assets/sprites/**/**/*.png"
+		],
 		"spritesheets": {
 			"spritesheet": [
 				"assets/frames/**/**/*.png"
