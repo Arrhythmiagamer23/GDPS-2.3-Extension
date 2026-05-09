@@ -632,6 +632,8 @@ inline void SetupObjects() {
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_walloutline"), "crystal_walloutline_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_filler"), "crystal_filler_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_bottom"), "crystal_bottom_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_corner"), "crystal_corner_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
@@ -1074,6 +1076,11 @@ inline void SetupObjects() {
 			input->getBGSprite()->setAnchorPoint({ 0.5f, 0.550f });
 			popup->m_buttonMenu->addChild(input);
 		}
+	
+	)->customSetup(
+		[](GameObject* a) {
+			if (a) a->m_addToNodeContainer = true;
+		}
 	)->saveString(
 		[](std::string str, GameObject* object, GJBaseGameLayer* level)
 		{
@@ -1142,7 +1149,7 @@ void main() {
 				CCShaderCache::sharedShaderCache()->addProgram(program, url.c_str());
 			}
 		}
-	)->customSetup([](GameObject* a) { if (a) a->m_addToNodeContainer = true; });
+	)->registerMe();
 }
 
 #include <Geode/modify/EffectGameObject.hpp>
