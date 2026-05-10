@@ -740,6 +740,44 @@ inline void SetupObjects() {
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2arrow"), "tig2arrow.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat1"), "boat_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2"), "boat_01_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("BoatGlow"), "boat_01_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2-1"), "boat_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2-2"), "boat_02_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2-Glow"), "boat_02_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2-Extra"), "boat_02_extra_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Drone1"), "drone_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Drone2"), "drone_01_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("DroneGlow"), "drone_01_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("DroneExtra"), "drone_01_extra_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Minecart1"), "minecart_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Minecart2"), "minecart_01_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("MinecartGlow"), "minecart_01_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("MinecartExtra"), "minecart_01_extra_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Slider1"), "slider_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Slider2"), "slider_01_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("SliderGlow"), "slider_01_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("SliderExtra"), "slider_01_extra_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
 	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
         UNIQ_ID("tig2saw"), "tig2saw.png",
         [](GameObject* a) { a->m_addToNodeContainer = true; }
