@@ -366,7 +366,10 @@ inline void SetupObjects() {
 					"Links have some special protocols!" "\n"
 					"Use <cg>user:{accountID}</c> to link to a GD account;" "\n"
 					"<cg>level:{id}</c> to link to a GD level and" "\n"
-					"<cg>mod:{id}</c> to link to another Geode mod.";
+					"<cg>mod:{id}</c> to link to another Geode mod." "\n"
+					"Or a external link from the internet." "\n"
+					"But, the one rule you should follow for safety for everyone," "\n"
+					"<cr>Don't put links to Viruses or Pornhub or anything that is bad.</c>";
 			}
 
 			auto input = TextInput::create(312.f, "", "chatFont.fnt");
