@@ -1139,13 +1139,13 @@ inline void SetupObjects() {
 		[](EditTriggersPopup* popup, EffectGameObject* trigger, CCArray* objects)
 		{
 			if (auto title = popup->getChildByType<CCLabelBMFont*>(0)) {
-				title->setString("\n \nApply Shader From URL\n (UNFINISHED)");
+				title->setString("\n \nApply Shader From URL\n (WIP and Experimental)");
 				title->setAnchorPoint(CCPointMake(0.5f, 0.3f));
 			}
 			if (auto inf = popup->m_buttonMenu->getChildByType<InfoAlertButton*>(0)) {
 				//inf->setVisible(false);
 				inf->m_description = ""
-					"Activate this trigger at active shader to apply custom shader program from url on it.";
+					"Activate this trigger at active shader to apply custom shader program from url on it. (Work in progress and experimental)";
 			}
 
 			auto input = TextInput::create(312.f, "fragment-shader.txt link", "chatFont.fnt");
