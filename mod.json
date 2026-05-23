@@ -9,7 +9,7 @@
 	},
 	"id": "roadhogstudios.reminafeatures",
 	"name": "2point3 Features",
-	"version": "v1.4.1",
+	"version": "v1.5.0",
 	"developers": [ "lil2kki", "roadhogstudios" ],
 	"description": "remina.bccst.ru",
 	"links": {
@@ -28,6 +28,18 @@
 		},
 		"alphalaneous.happy_textures": {
 			"version": ">=v2.0.7",
+			"required": false
+		},
+		"iandyhd3.infinite_inputs": {
+			"version": ">=v1.0.0",
+			"required": false
+		},
+		"undefined0.object_glow_in_editor": {
+			"version": ">=v1.0.0",
+			"required": false
+		},
+		"cvolton.misc_bugfixes": {
+			"version": ">=v1.0.0",
 			"required": false
 		}
 	},
