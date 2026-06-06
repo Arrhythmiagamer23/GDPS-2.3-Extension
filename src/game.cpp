@@ -1135,6 +1135,125 @@ inline void SetupObjects() {
 		)
     );
 
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("cubering"),
+            "cubeRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+				plr->toggleFlyMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleRollMode(false, false); log::info("activated by player, {}, {}", object, plr);
+                plr->toggleSwingMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleBirdMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleDartMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleRobotMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleSpiderMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleSwingMode(false, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("shipring"),
+            "shipRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleFlyMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("rollring"),
+            "rollRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleRollMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("birdring"),
+            "birdRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleBirdMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("dartring"),
+            "dartRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleDartMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("robotring"),
+            "robotRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleRobotMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("spiderchangering"),
+            "spiderchangeRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleSpiderMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("swingring"),
+            "swingRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleSwingMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
 	GameObjectsFactory::createTriggerConfig(
 		UNIQ_ID("custom-shader"), "edit_eShaderCustomBtn_001.png",
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
