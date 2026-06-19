@@ -1358,7 +1358,7 @@ inline void SetupObjects() {
             UNIQ_ID("DropPad"),
             "DropPad.png",
             [](EnhancedGameObject* object, PlayerObject* plr) {
-                plr->pushDown(); log::info("activated by player, {}, {}", object, plr);
+                plr->pushPlayer(-8); log::info("activated by player, {}, {}", object, plr);
             }
         )->customSetup(
 			[](GameObject* a) {
