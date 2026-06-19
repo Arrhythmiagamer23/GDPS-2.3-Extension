@@ -8,8 +8,8 @@ using namespace geode::prelude;
 
 #include <regex>
 
-#include <user95401.game-objects-factory/include/main.hpp>
-#include <user95401.game-objects-factory/include/impl.hpp>
+#include <roadhogstudios.game-objects-factory/include/main.hpp>
+#include <roadhogstudios.game-objects-factory/include/impl.hpp>
 
 void SetupObjects();
 $on_mod(Loaded) { SetupObjects(); }
@@ -1302,6 +1302,35 @@ inline void SetupObjects() {
             "ReverseRing2.png",
             [](EnhancedGameObject* object, PlayerObject* plr) {
                 plr->doReversePlayer(false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createDashRingConfig(
+            UNIQ_ID("ReverseDashRing"),
+            "ReverseDashRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->doReversePlayer(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createDashRingConfig(
+            UNIQ_ID("GravReverseDashRing"),
+            "GravReverseDashRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->doReversePlayer(true); log::info("activated by player, {}, {}", object, plr);
+				plr->flipGravity(!plr->m_isUpsideDown, true); log::info("activated by player, {}, {}", object, plr);
             }
         )->customSetup(
 			[](GameObject* a) {

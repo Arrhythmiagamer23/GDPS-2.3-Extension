@@ -1,7 +1,7 @@
 #include <.hpp>
 
-#include <user95401.game-objects-factory/include/main.hpp>
-#include <user95401.game-objects-factory/include/impl.hpp>
+#include <roadhogstudios.game-objects-factory/include/main.hpp>
+#include <roadhogstudios.game-objects-factory/include/impl.hpp>
 
 // DIALOGUE TRIGGER EXTENSIONS
 
