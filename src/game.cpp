@@ -1254,6 +1254,48 @@ inline void SetupObjects() {
 		)
     );
 
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("ShowRing"),
+            "ShowRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleVisibility(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("ReverseRing1"),
+            "ReverseRing1.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->doReversePlayer(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("ReverseRing2"),
+            "ReverseRing2.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->doReversePlayer(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
 	GameObjectsFactory::createTriggerConfig(
 		UNIQ_ID("custom-shader"), "edit_eShaderCustomBtn_001.png",
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
@@ -1725,7 +1767,6 @@ class $modify(LevelEditorLayerExt, LevelEditorLayer) {
 		LevelEditorLayer::onPlaytest();
 	}
 	virtual void playerTookDamage(PlayerObject * player) {
-		player->playDeathEffect();
 		LevelEditorLayer::playerTookDamage(player);
 	}
 };
