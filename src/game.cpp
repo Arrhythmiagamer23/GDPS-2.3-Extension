@@ -1339,6 +1339,20 @@ inline void SetupObjects() {
 		)
     );
 
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createPadConfig(
+            UNIQ_ID("GravJumpPad"),
+            "GreenPad.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->flipGravity(!plr->m_isUpsideDown, true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
 	GameObjectsFactory::createTriggerConfig(
 		UNIQ_ID("custom-shader"), "edit_eShaderCustomBtn_001.png",
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
