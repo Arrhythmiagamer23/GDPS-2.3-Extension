@@ -1256,6 +1256,20 @@ inline void SetupObjects() {
 
 	GameObjectsFactory::registerGameObject(
         GameObjectsFactory::createRingConfig(
+            UNIQ_ID("HideRing"),
+            "HideRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleVisibility(false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
             UNIQ_ID("ShowRing"),
             "ShowRing.png",
             [](EnhancedGameObject* object, PlayerObject* plr) {
@@ -1287,7 +1301,7 @@ inline void SetupObjects() {
             UNIQ_ID("ReverseRing2"),
             "ReverseRing2.png",
             [](EnhancedGameObject* object, PlayerObject* plr) {
-                plr->doReversePlayer(true); log::info("activated by player, {}, {}", object, plr);
+                plr->doReversePlayer(false); log::info("activated by player, {}, {}", object, plr);
             }
         )->customSetup(
 			[](GameObject* a) {
