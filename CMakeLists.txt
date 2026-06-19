@@ -13,7 +13,7 @@ file( DOWNLOAD "https://github.com/lil2kki/geode-download-dependency-cmake/blob/
     ${CMAKE_CURRENT_BINARY_DIR}/geode-download-dependency.cmake)
 include(${CMAKE_CURRENT_BINARY_DIR}/geode-download-dependency.cmake)
 
-download_dependency_mod(lil2kki/geode-game-objects-factory user95401.game-objects-factory FALSE)
+download_dependency_mod(Arrhythmiagamer23/geode-game-objects-factory roadhogstudios.game-objects-factory FALSE)
 
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
 
