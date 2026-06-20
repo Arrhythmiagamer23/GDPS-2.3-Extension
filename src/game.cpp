@@ -1340,6 +1340,20 @@ inline void SetupObjects() {
     );
 
 	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createDashRingConfig(
+            UNIQ_ID("SpiderDashRing"),
+            "SpiderDashRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->spiderTestJump(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
         GameObjectsFactory::createPadConfig(
             UNIQ_ID("GravJumpPad"),
             "GreenPad.png",
