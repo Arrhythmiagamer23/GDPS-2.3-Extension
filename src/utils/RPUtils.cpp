@@ -26,35 +26,7 @@ public:
         }
 
         switch (obj->m_objectID) { // Portal colors remade bc it the original color of the UFO blends in with the ball and the swing, lol
-        case 12:
-            obj->m_particle->setStartColor({ 0.f, 1.f, 0.f, 1.f });
-            obj->m_particle->setEndColor({ 0.f, 0.85f, 0.f, 1.f });
-            break;
-        case 13:
-            obj->m_particle->setStartColor({ 1.f, 0.f, 1.f, 1.f });
-            obj->m_particle->setEndColor({ 0.85f, 0.f, 0.85f, 1.f });
-            break;
-        case 47:
-            obj->m_particle->setStartColor({ 0.85f, 0.05f, 0.05f, 1.f });
-            obj->m_particle->setEndColor({ 0.65f, 0.f, 0.f, 1.f });
-            break;
-        case 111:
-            obj->m_particle->setStartColor({ 1.f, 0.55f, 0.f, 1.f });
-            obj->m_particle->setEndColor({ 1.f, 0.4f, 0.f, 1.f });
-            break;
-        case 660:
-            obj->m_particle->setStartColor({ 0.f, 0.45f, 1.f, 1.f });
-            obj->m_particle->setEndColor({ 0.f, 0.3f, 0.9f, 1.f });
-            break;
-        case 745:
-            obj->m_particle->setStartColor({ 1.f, 1.f, 1.f, 1.f });
-            obj->m_particle->setEndColor({ 0.9f, 0.9f, 0.9f, 1.f });
-            break;
-        case 1331:
-            obj->m_particle->setStartColor({ 0.65f, 0.f, 1.f, 1.f });
-            obj->m_particle->setEndColor({ 0.5f, 0.f, 0.85f, 1.f });
-            break;
-        case 1933:
+        case 31790:
             obj->m_particle->setStartColor({ 1.f, 0.85f, 0.f, 1.f });
             obj->m_particle->setEndColor({ 0.9f, 0.7f, 0.f, 1.f });
             break;
@@ -63,6 +35,8 @@ public:
 
     static void updateBackSprite(GameObject* obj, CCSpriteFrameCache* frames, int texIndex) {
         if (!isBackObject(obj->getContentSize())) return;
+        if (!isBackObject(obj->m_objectID())) return;
+
 
         auto name = CCString::createWithFormat("back_%02d.png", texIndex)->getCString();
         auto frame = frames->spriteFrameByName(name);
