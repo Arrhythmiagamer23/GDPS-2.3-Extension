@@ -9,7 +9,8 @@ RoadHogStudios: Lead Developer and Modifier of Remina GDPS mod.<br>
 Lil2kki: Remina GDPS mod owner.<br>
 GDL7u7: New decoration Textures for objects.<br>
 BootDark: Final Dash Orb Object Sprites.<br>
-OmegaFalcon: Spider Dash Orb Sprite.
+OmegaFalcon: Spider Dash Orb Sprite.<br>
+iArtie: Random Portals Mod stuff.
 
 
 ## Why is it not in the geode index?
