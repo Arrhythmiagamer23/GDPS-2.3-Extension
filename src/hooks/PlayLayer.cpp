@@ -28,14 +28,7 @@ class $modify(PlayLayer) {
         };
 
         static const std::unordered_map<std::string, int> nameToId = {
-            {"Cube", 12},
-            {"Ship", 13},
-            {"Ball", 47},
-            {"Ufo", 111},
-            {"Wave", 660},
-            {"Robot", 745},
-            {"Spider", 1331},
-            {"Swing", 1933}
+            {"Ship", 31790}
         };
 
         auto easyMode = Mod::get()->getSettingValue<bool>("easyMode");
