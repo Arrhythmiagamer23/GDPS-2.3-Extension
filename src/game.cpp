@@ -1372,7 +1372,7 @@ inline void SetupObjects() {
             UNIQ_ID("DropPad"),
             "DropPad.png",
             [](EnhancedGameObject* object, PlayerObject* plr) {
-                plr->pushPlayer(-8); log::info("activated by player, {}, {}", object, plr);
+                plr->boostPlayer(-8); log::info("activated by player, {}, {}", object, plr);
             }
         )->customSetup(
 			[](GameObject* a) {
@@ -1415,6 +1415,21 @@ inline void SetupObjects() {
             "PauseSpeed.png",
             [](EnhancedGameObject* object, PlayerObject* plr) {
                 plr->m_playerSpeed = 0.0f; log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createGravityPortalConfig(
+            UNIQ_ID("gravityJumpPortal"),
+            "gravityJumpPortal.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+				plr->updateJump(5); log::info("activated by player, {}, {}", object, plr);
+				plr->updateJump(5); log::info("activated by player, {}, {}", object, plr);
             }
         )->customSetup(
 			[](GameObject* a) {
