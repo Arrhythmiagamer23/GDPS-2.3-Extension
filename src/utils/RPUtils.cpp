@@ -35,13 +35,11 @@ public:
 
     static void updateBackSprite(GameObject* obj, CCSpriteFrameCache* frames, int texIndex) {
         if (!isBackObject(obj->getContentSize())) return;
-        if (!isBackObject(obj->m_objectID())) return;
-
 
         auto name = CCString::createWithFormat("back_%02d.png", texIndex)->getCString();
         auto frame = frames->spriteFrameByName(name);
 
-        if (frame) {
+        if (frame && isPortalObject(obj->m_objectID)) {
             obj->setDisplayFrame(frame);
             obj->setAnchorPoint({ 0.960f, 0.495f });
         }
