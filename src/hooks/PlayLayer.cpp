@@ -24,14 +24,7 @@ class $modify(PlayLayer) {
 
     void resetLevel() {
         static const std::vector<std::tuple<int, int, int>> portalTypes = {
-            {12, 6, 3}, // I'm mentioning this so no one here misses it: Portal object ID: 12, GameObjectType::CubePortal: 6, portal texture ID: 3
-            {13, 5, 4},
-            {47, 16, 7},
-            {111, 19, 10},
-            {660, 26, 13},
-            {745, 27, 14},
-            {1331, 33, 17},
-            {1933, 41, 18}
+            {31790, 6, 3},
         };
 
         static const std::unordered_map<std::string, int> nameToId = {
