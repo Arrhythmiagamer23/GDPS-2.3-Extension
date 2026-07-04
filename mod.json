@@ -71,6 +71,69 @@
 			"description": "things was better then ya?",
 			"type": "bool",
 			"default": false
+		},
+		"wildcards-section": {
+			"name": "Wild cards",
+			"description": "With each wildcard, you can disable randomization for a specific vehicle type",
+			"type": "title"
+		},
+		"wildcard1": {
+			"name": "Wild card 1",
+			"type": "string",
+			"default": "None",
+			"one-of": [ "None", "Cube", "Ship", "Ball", "Ufo", "Wave", "Robot", "Spider", "Swing" ]
+		},
+		"wildcard2": {
+			"name": "Wild card 2",
+			"type": "string",
+			"default": "None",
+			"one-of": [ "None", "Cube", "Ship", "Ball", "Ufo", "Wave", "Robot", "Spider", "Swing" ]
+		},
+		"wildcard3": {
+			"name": "Wild card 3",
+			"type": "string",
+			"default": "None",
+			"one-of": [ "None", "Cube", "Ship", "Ball", "Ufo", "Wave", "Robot", "Spider", "Swing" ]
+		},
+		"wildcard4": {
+			"name": "Wild card 4",
+			"type": "string",
+			"default": "None",
+			"one-of": [ "None", "Cube", "Ship", "Ball", "Ufo", "Wave", "Robot", "Spider", "Swing" ]
+		},
+		"Extras-section": {
+			"name": "Extras",
+			"description": "A few extra options to make the experience even more enjoyable :D",
+			"type": "title"
+		},
+		"easyMode": {
+			"name": "Easy Mode",
+			"description": "This option gives the chance to 50% to stay all portals in the original portal",
+			"type": "bool",
+			"default": false
+		},
+		"freeMode": {
+			"name": "Free Fly Mode",
+			"description": "This option gives the option to make the camera free in the game",
+			"type": "bool",
+			"default": false
+		},
+		"enable-in-editor": {
+			"name": "Enable random textures in editor",
+			"description": "This option enable the texture randomization in the editor",
+			"type": "bool",
+			"default": false
+		},
+		"disableBlending": {
+			"name": "Disable Portal Bleding",
+			"description": "This removes the blending for the portal particules",
+			"type": "bool",
+			"default": false
+		},
+		"In-game-section": {
+			"name": "In-game options",
+			"description": "Here are some options that cannot be unlocked with the mod",
+			"type": "title"
 		}
 	}
 }
