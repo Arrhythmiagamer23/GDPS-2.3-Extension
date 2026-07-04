@@ -5,14 +5,7 @@ class RPUtils {
 public:
 
     static bool isPortalObject(int objectID) {
-        return objectID == 12
-            || objectID == 13
-            || objectID == 47
-            || objectID == 111
-            || objectID == 660
-            || objectID == 745
-            || objectID == 1331
-            || objectID == 1933;
+        return objectID == 31790;
     }
 
     static bool isBackObject(CCSize size) {
