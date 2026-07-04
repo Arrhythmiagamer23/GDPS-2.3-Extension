@@ -129,11 +129,6 @@
 			"description": "This removes the blending for the portal particules",
 			"type": "bool",
 			"default": false
-		},
-		"In-game-section": {
-			"name": "In-game options",
-			"description": "Here are some options that cannot be unlocked with the mod",
-			"type": "title"
 		}
 	}
 }
