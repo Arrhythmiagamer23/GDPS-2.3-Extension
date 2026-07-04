@@ -1441,7 +1441,7 @@ inline void SetupObjects() {
 	GameObjectsFactory::registerGameObject(
         GameObjectsFactory::createGamemodePortalConfig(
             UNIQ_ID("randomPortal"),
-            "randomPortal.png", "randomPortalBack.png",
+            "randomPortal.png",
             [](EnhancedGameObject* object, PlayerObject* plr) {
 				plr->playBurstEffect(); log::info("activated by player, {}, {}", object, plr);
             }
