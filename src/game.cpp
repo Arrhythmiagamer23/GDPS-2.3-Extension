@@ -743,6 +743,38 @@ inline void SetupObjects() {
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2arrow"), "tig2arrow.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2blockPixel"), "tig2blockPixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2blockPixelsmall"), "tig2blockPixelsmall.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-horizontalPixel"), "tig2block-horizontalPixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-light"), "tig2block-light.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-emerald"), "tig2block-emerald.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-redPixel"), "tig2block-redPixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-bluePixel"), "tig2block-bluePixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikePixel"), "tig2spikePixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikePixelsmall"), "tig2spikePixelsmall.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-light"), "tig2spike-light.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikeRuby"), "tig2spikeRuby.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2discoArrow"), "tig2discoArrow.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2discoArrowOutline"), "tig2discoArrowOutline.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2discoArrowGrey"), "tig2discoArrowGrey.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2orb"), "tig2orb.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2arrowPixel"), "tig2arrowPixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat1"), "boat_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2"), "boat_01_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
@@ -780,6 +812,11 @@ inline void SetupObjects() {
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("SliderGlow"), "slider_01_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("SliderExtra"), "slider_01_extra_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("tig2sawPixel"), "tig2sawPixel.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
 
 	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
         UNIQ_ID("tig2saw"), "tig2saw.png",
