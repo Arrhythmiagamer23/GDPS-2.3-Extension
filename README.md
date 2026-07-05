@@ -4,6 +4,8 @@ You can create anything in part of game engineering.
 
 This mod from Remina GDPS was modified and simplified to match the looks of the Geometry Dash Game.
 
+This mod also requires the Forked .geode mod of Game Objects factory that supports pads, dash orbs, speed portals, gamemode portals and more.
+
 ### Credits:
 RoadHogStudios: Lead Developer and Modifier of Remina GDPS mod.<br>
 Lil2kki: Remina GDPS mod owner.<br>
