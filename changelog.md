@@ -1,5 +1,5 @@
 # v2.3.1 - An Adjustment Patch (Latest)
-Adjusted the name of RoadHogStudios to KDSGeoDash.
+Adjusted the name of RoadHogStudios to KDSGeoDash and added a brand new icon.
 
 ## v2.3.0 - Another Impossible Update (Previous Update)
 Added TIG2 Stuff.
