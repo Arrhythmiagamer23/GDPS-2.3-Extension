@@ -1,7 +1,10 @@
-# v2.3.1 - An Adjustment Patch (Latest)
+# v2.3.1.1 - An Adjustment Patch (Latest)
+Adjusted the name of KDSGeoDash to Arrhythmiagamer23.
+
+# v2.3.1 - An Adjustment Patch (Previous Update)
 Adjusted the name of RoadHogStudios to KDSGeoDash and added a brand new icon.
 
-## v2.3.0 - Another Impossible Update (Previous Update)
+## v2.3.0 - Another Impossible Update
 Added TIG2 Stuff.
 
 ## v2.2.2 - Rainbow Adjusted
