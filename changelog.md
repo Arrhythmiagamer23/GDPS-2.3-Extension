@@ -1,4 +1,4 @@
-# v2.3.1.1 - An Adjustment Patch (Latest)
+# v2.3.11 - An Adjustment Patch (Latest)
 Adjusted the name of KDSGeoDash to Arrhythmiagamer23.
 
 # v2.3.1 - An Adjustment Patch (Previous Update)
