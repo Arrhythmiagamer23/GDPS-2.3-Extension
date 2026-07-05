@@ -8,11 +8,11 @@ This mod also requires the Forked .geode mod of Game Objects factory that suppor
 https://github.com/Arrhythmiagamer23/geode-game-objects-factory/releases
 
 ### Credits:
-RoadHogStudios: Lead Developer and Modifier of Remina GDPS mod.<br>
-Lil2kki: Remina GDPS mod owner.<br>
-GDL7u7: New decoration Textures for objects.<br>
-BootDark: Final Dash Orb Object Sprites.<br>
-OmegaFalcon: Spider Dash Orb Sprite.<br>
+RoadHogStudios: Lead Developer and Modifier of Remina GDPS mod.
+Lil2kki: Remina GDPS mod owner.
+GDL7u7: New decoration Textures for objects.
+BootDark: Final Dash Orb Object Sprites.
+OmegaFalcon: Spider Dash Orb Sprite.
 iArtie: Random Portals Mod stuff ported and turned into a custom object feature.
 
 
