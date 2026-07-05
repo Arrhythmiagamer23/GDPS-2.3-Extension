@@ -10,7 +10,11 @@ https://github.com/Arrhythmiagamer23/geode-game-objects-factory/releases
 ### Credits:
 RoadHogStudios: Lead Developer and Modifier of Remina GDPS mod.<br>
 Lil2kki: Remina GDPS mod owner.<br>
-GDL7u7: New decoration Textures for objects.
+GDL7u7: New decoration Textures for objects.<br>
+BootDark: Final Dash Orb Object Sprites.<br>
+OmegaFalcon: Spider Dash Orb Sprite.<br>
+iArtie: Random Portals Mod stuff ported and turned into a custom object feature.
+
 
 ## Why is it not in the geode index?
 They said this to Lil2kki.
@@ -20,6 +24,6 @@ as it could lead to tons of problems for users
 without the mod and also potentially the server. 
 It's a good idea though, I will say.
 ```
-You can experiment and try it to make something cool, but don't upload any levels unless you have your own GDPS you made to add and be able to create with it.
+You can experiment and try it to make something cool, but don't upload any levels unless you have your own GDPS you made to add and be able to create with it only in the GDPS you own.
 
 Feel free to use it on your own GDPS.
