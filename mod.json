@@ -10,7 +10,7 @@
 	"id": "roadhogstudios.reminafeatures",
 	"name": "2point3 Features",
 	"version": "v2.3.0",
-	"developers": [ "lil2kki", "roadhogstudios" ],
+	"developers": [ "lil2kki", "KDSGeoDash" ],
 	"description": "remina.bccst.ru",
 	"links": {
 		"source": "https://github.com/Arrhythmiagamer23/GDPS-2.3-Extension",
@@ -31,10 +31,6 @@
 			"required": false
 		},
 		"iandyhd3.infinite_inputs": {
-			"version": ">=v1.0.0",
-			"required": false
-		},
-		"undefined0.object_glow_in_editor": {
 			"version": ">=v1.0.0",
 			"required": false
 		},
