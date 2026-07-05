@@ -1,5 +1,5 @@
 # v2.3.1 - An Adjustment Patch (Latest)
-Adjusted the Mod Fork's name.
+Adjusted the name of RoadHogStudios to KDSGeoDash.
 
 ## v2.3.0 - Another Impossible Update (Previous Update)
 Added TIG2 Stuff.
