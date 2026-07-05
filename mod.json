@@ -13,9 +13,7 @@
 	"developers": [ "lil2kki", "Arrhythmiagamer23" ],
 	"description": "remina.bccst.ru",
 	"links": {
-		"source": "https://github.com/Arrhythmiagamer23/GDPS-2.3-Extension",
-		"community": "https://discord.gg/NXbbv2HZGg",
-		"homepage": "https://remina.bccst.ru"
+		"source": "https://github.com/Arrhythmiagamer23/GDPS-2.3-Extension"
 	},
 	"dependencies": {
 		"geode.node-ids": {
