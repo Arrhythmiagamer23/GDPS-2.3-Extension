@@ -1,7 +1,10 @@
-# v2.3.11 - An Adjustment Patch (Latest)
+# v2.4.0 - Android is finally in there! (Latest)
+Finally Added Android Compatibility after many attempts.
+
+# v2.3.11 - An Adjustment Patch (Previous Update)
 Adjusted the name of KDSGeoDash to Arrhythmiagamer23.
 
-# v2.3.1 - An Adjustment Patch (Previous Update)
+# v2.3.1 - An Adjustment Patch
 Adjusted the name of RoadHogStudios to KDSGeoDash and added a brand new icon.
 
 ## v2.3.0 - Another Impossible Update
