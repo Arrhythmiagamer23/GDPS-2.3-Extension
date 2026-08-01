@@ -613,6 +613,26 @@ inline void SetupObjects() {
 		}
 	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("DashTrigger"), "dashTrigger.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_isDashing = true;
+			if (auto a = game->m_player2) a->m_isDashing = true;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("ReverseDir"), "ReverseDir.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->doReversePlayer(!a->m_isFlipX);
+			if (auto a = game->m_player2) a->doReversePlayer(!a->m_isFlipX);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftwidetop"), "crystal_leftwidetop_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftwidebot"), "crystal_leftwidebottom_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
@@ -666,6 +686,10 @@ inline void SetupObjects() {
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rock1"), "crystalrock_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rock2"), "crystalrock_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rock3"), "crystalrock_03_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rock4"), "crystal_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("firepillar1"), "firepillar_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
@@ -822,6 +846,26 @@ inline void SetupObjects() {
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("SliderGlow"), "slider_01_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("SliderExtra"), "slider_01_extra_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("GJBeast6"), "GJBeast06.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("GJBeast6glow"), "GJBeast06_01_glow.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("d_animWave_04"), "d_animWave_04.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("d_animWave_04_base"), "d_animWave_04_base_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("GJBeast07"), "GJBeast07_01_looped.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("GJBeast08"), "GJBeast08_01_looped.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("GJBeast09"), "GJBeast09_01.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("camHead"), "camhead001_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("camNeck"), "camneck001_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("camBody"), "cambody001_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
         UNIQ_ID("tig2sawPixel"), "tig2sawPixel.png",
@@ -1349,6 +1393,20 @@ inline void SetupObjects() {
             "ReverseRing2.png",
             [](EnhancedGameObject* object, PlayerObject* plr) {
                 plr->doReversePlayer(false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("OrangeRing"),
+            "OrangeRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->pushPlayer(13); log::info("activated by player, {}, {}", object, plr);
             }
         )->customSetup(
 			[](GameObject* a) {
