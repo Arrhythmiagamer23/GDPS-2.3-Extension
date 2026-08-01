@@ -1,7 +1,10 @@
-# v2.4.0 - Android is finally in there! (Latest)
+# v2.5.0 - Six Times Faster in a Rush of Sugar (Latest)
+Added Collectibles which are Candies from Candy Crush Saga and A 6x Speed Portal and Trigger requested by
+
+# v2.4.0 - Android is finally in there! (Previous Update)
 Finally Added Android Compatibility after many attempts.
 
-# v2.3.11 - An Adjustment Patch (Previous Update)
+# v2.3.11 - An Adjustment Patch (Adjustment 1)
 Adjusted the name of KDSGeoDash to Arrhythmiagamer23.
 
 # v2.3.1 - An Adjustment Patch
@@ -11,7 +14,7 @@ Adjusted the name of RoadHogStudios to KDSGeoDash and added a brand new icon.
 Added TIG2 Stuff.
 
 ## v2.2.2 - Rainbow Adjusted
-Probably tweaked the regular gamemode portals to not go half-rainbow. :)
+Probably tweaked the regular gamemode portals to not go half-rainbow.
 
 ## v2.2.1 - A Randomized Update (A skip through v2.2.0)
 Added The Random Portal from RandomPortals Mod as a custom Object.
