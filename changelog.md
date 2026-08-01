@@ -1,7 +1,10 @@
-# v2.6.0 - A Classic and Crazy Flashback Fever (Latest)
+# v2.7.0 - The Grand Return of the ReverseDir Trigger (Latest)
+Brought Back the ReverseDir Trigger and Added the Dash Trigger also.
+
+# v2.6.0 - A Classic and Crazy Flashback Fever (Previous Update)
 Added Orange Ring that makes you jump very high, and new monsters and objects are here, but i still don't know how to animate sprites with a geode mod named Animate This Sprite!
 
-# v2.5.1 - Readjustments to the Candies (Previous Update)
+# v2.5.1 - Readjustments to the Candies
 Turned the candy Collectibles into decorations because it shares the same sprites as the floppy disk collectible.
 
 # v2.5.0 - Six Times Faster in a Rush of Sugar
