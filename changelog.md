@@ -1,5 +1,5 @@
 # v2.6.0 - A Classic and Crazy Flashback Fever (Latest)
-Added Orange Ring that makes you jump very high, and new monsters and objects are here with Texture loader and Animate this sprite were required.
+Added Orange Ring that makes you jump very high, and new monsters and objects are here, but i still don't know how to animate sprites with a geode mod named Animate This Sprite!
 
 # v2.5.1 - Readjustments to the Candies (Previous Update)
 Turned the candy Collectibles into decorations because it shares the same sprites as the floppy disk collectible.
