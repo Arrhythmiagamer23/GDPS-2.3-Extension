@@ -1,7 +1,10 @@
-# v2.5.1 - Readjustments to the Candies (Latest)
+# v2.6.0 - A Classic and Crazy Flashback Fever (Latest)
+Added Orange Ring that makes you jump very high, and new monsters and objects are here with Texture loader and Animate this sprite were required.
+
+# v2.5.1 - Readjustments to the Candies (Previous Update)
 Turned the candy Collectibles into decorations because it shares the same sprites as the floppy disk collectible.
 
-# v2.5.0 - Six Times Faster in a Rush of Sugar (Previous Update)
+# v2.5.0 - Six Times Faster in a Rush of Sugar
 Added Collectibles which are Candies from Candy Crush Saga and A 6x Speed Portal and Trigger requested by a Youtuber named GeometryDashGameplays.
 
 # v2.4.0 - Android is finally in there!
