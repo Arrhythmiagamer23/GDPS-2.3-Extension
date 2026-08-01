@@ -1,14 +1,14 @@
-# v2.5.0 - Six Times Faster in a Rush of Sugar (Latest)
-Added Collectibles which are Candies from Candy Crush Saga and A 6x Speed Portal and Trigger requested by
+# v2.5.1 - Readjustments to the Candies (Latest)
+Turned the candy Collectibles into decorations because it shares the same sprites as the floppy disk collectible.
 
-# v2.4.0 - Android is finally in there! (Previous Update)
+# v2.5.0 - Six Times Faster in a Rush of Sugar (Previous Update)
+Added Collectibles which are Candies from Candy Crush Saga and A 6x Speed Portal and Trigger requested by a Youtuber named GeometryDashGameplays.
+
+# v2.4.0 - Android is finally in there!
 Finally Added Android Compatibility after many attempts.
 
 # v2.3.11 - An Adjustment Patch (Adjustment 1)
 Adjusted the name of KDSGeoDash to Arrhythmiagamer23.
-
-# v2.3.1 - An Adjustment Patch
-Adjusted the name of RoadHogStudios to KDSGeoDash and added a brand new icon.
 
 ## v2.3.0 - Another Impossible Update
 Added TIG2 Stuff.
