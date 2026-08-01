@@ -594,6 +594,16 @@ inline void SetupObjects() {
 	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-six"), "plr-speed-six.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 2.4f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 2.4f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
 		UNIQ_ID("plr-speed-pause"), "plr-speed-pause.png",
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
 		{
@@ -1448,6 +1458,20 @@ inline void SetupObjects() {
 
 	GameObjectsFactory::registerGameObject(
         GameObjectsFactory::createSpeedPortalConfig(
+            UNIQ_ID("SixTimesSpeed"),
+            "6xSpeed.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->m_playerSpeed = 2.4f; log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createSpeedPortalConfig(
             UNIQ_ID("PauseSpeed"),
             "PauseSpeed.png",
             [](EnhancedGameObject* object, PlayerObject* plr) {
@@ -1488,6 +1512,30 @@ inline void SetupObjects() {
 			}
 		)
     );
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("redCandy"), "RedCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("orangeCandy"), "OrangeCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("yellowCandy"), "YellowCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("greenCandy"), "GreenCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("cyanCandy"), "CyanCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("cyanDonutCandy"), "CyanDonutCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("blueCandy"), "BlueCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("purpleCandy"), "PurpleCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("darkPurpleCandy"), "DarkPurpleCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("darkBlueCandy"), "DarkBlueCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("whiteCandy"), "WhiteCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("rainbowChocolate"), "RainbowChocolate.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createTriggerConfig(
 		UNIQ_ID("custom-shader"), "edit_eShaderCustomBtn_001.png",
