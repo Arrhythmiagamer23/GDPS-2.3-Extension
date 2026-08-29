@@ -1,7 +1,10 @@
-# v2.7.0 - The Grand Return of the ReverseDir Trigger (Latest)
+# v2.8.0 - Refurbished Graphics in the go (Latest)
+Updated the Image/Label Feature to the latest version.
+
+# v2.7.0 - The Grand Return of the ReverseDir Trigger (Previous Update)
 Brought Back the ReverseDir Trigger and Added the Dash Trigger also.
 
-# v2.6.0 - A Classic and Crazy Flashback Fever (Previous Update)
+# v2.6.0 - A Classic and Crazy Flashback Fever
 Added Orange Ring that makes you jump very high, and new monsters and objects are here, but i still don't know how to animate sprites with a geode mod named Animate This Sprite!
 
 # v2.5.1 - Readjustments to the Candies
