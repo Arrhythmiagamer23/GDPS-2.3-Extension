@@ -21,6 +21,8 @@
 			"required": false
 		},
 		"cvolton.level-id-api": ">=2.0.0",
+		"alphalaneous.level-storage-api": ">=v1.0.5",
+    	"alphalaneous.editortab_api": ">=2.1.13",
 		"ninxout.options_api": {
             "version": ">=1.0.3-beta.1",
             "required": false
