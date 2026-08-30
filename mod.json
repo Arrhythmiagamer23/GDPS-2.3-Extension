@@ -28,7 +28,7 @@
 		"smjs.object-collab": {
 			"version": ">=0.5.5-beta.3",
 			"required": false
-		}
+		},
 		"prevter.imageplus": {
 			"version": ">=v1.0.3",
 			"required": false
