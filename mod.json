@@ -20,6 +20,11 @@
 			"version": ">=v1.23.3",
 			"required": false
 		},
+		"cvolton.level-id-api": ">=2.0.0",
+		"ninxout.options_api": {
+            "version": ">=1.0.3-beta.1",
+            "required": false
+        },
 		"smjs.object-collab": {
 			"version": ">=0.5.5-beta.3",
 			"required": false
@@ -41,12 +46,23 @@
 			"required": false
 		}
 	},
+	"api": {
+        "include": [ "include/cosmic_clones/*.hpp"]
+    },
 	"resources": {
 		"files": [
-			"resources/*.zip"
+			"resources/*.zip",
+			"resources/audio/*/*"
 		],
 		"sprites": [
-			"assets/sprites/**/**/*.png"
+			"assets/sprites/**/**/*.png",
+			"resources/sprites/cosmic.png",
+            "resources/sprites/normal.png",
+            "resources/sprites/star.png",
+            "resources/sprites/HungryLuma.png",
+            "resources/sprites/MD_DifficultyYOSmall.png",
+            "resources/sprites/eri.png",
+            "resources/sprites/markiplier.png"
 		],
 		"spritesheets": {
 			"spritesheet": [
@@ -54,7 +70,12 @@
 			],
 			"BigPortalSheet": [
 				"resources/*.png"
-			]
+			],
+			"CloneSheet01": [
+                "resources/sprites/cube_1.png",
+                "resources/sprites/triggerInner.png",
+                "resources/sprites/triggerMain.png"
+            ]
 		}
 	},
 	"settings": {
@@ -133,6 +154,114 @@
 			"description": "This removes the blending for the portal particules",
 			"type": "bool",
 			"default": false
-		}
+		},
+		"clones-section": {
+			"name": "Challenge Features",
+			"description": "These do not modify clones from the clones trigger. But can be useful for challenge mode.",
+			"type": "title"
+		},
+		"enabled": {
+            "name": "Clones in Every Level",
+            "description": "Spawns clones from the start of every level. When this is disabled, you can enable them for specific levels in level options.",
+            "type": "bool",
+            "default": false
+        },
+        "spawn-delay": {
+            "name": "Initial Delay",
+            "description": "Delay between the player spawning and the clones spawning. <cy>This is recommended to be higher than the main delay.</c>",
+            "type": "float",
+            "enable-if": "enabled",
+            "default": 1.5,
+            "min": 0.25,
+            "max": 20,
+            "control": {
+                "slider": true,
+                "slider-step": 0.25,
+                "arrows": true,
+                "arrow-step": 0.25,
+                "big-arrows": true,
+                "big-arrow-step": 1
+            }
+        },
+        "delay": {
+            "name": "Delay",
+            "description": "Delay between cosmic clones spawn.",
+            "type": "float",
+            "enable-if": "enabled",
+            "default": 1,
+            "min": 0.25,
+            "max": 20,
+            "control": {
+                "slider": true,
+                "slider-step": 0.25,
+                "arrows": true,
+                "arrow-step": 0.25,
+                "big-arrows": true,
+                "big-arrow-step": 1
+            }
+        },
+        "normal-mode": {
+            "name": "Enable in Normal Mode",
+            "description": "If clones should spawn in normal mode.",
+            "type": "bool",
+            "enable-if": "enabled",
+            "default": false
+        },
+        "editor": {
+            "name": "Enable in Editor",
+            "description": "If clones should spawn in the editor.",
+            "type": "bool",
+            "enable-if": "enabled",
+            "default": false
+        },
+        "friendly": {
+            "name": "No Damage",
+            "description": "Prevents clones from damaging you.\nSuggested by DragosDobrican.",
+            "type": "bool",
+            "enable-if": "enabled",
+            "default": false
+        },
+        "clones": {
+            "name": "Clone Count",
+            "description": "How many clones can spawn.",
+            "type": "int",
+            "enable-if": "enabled",
+            "default": 3,
+            "min": 1,
+            "max": 20,
+            "control": {
+                "slider": true,
+                "slider-step": 1,
+                "arrows": true,
+                "arrow-step": 1
+            }
+        },
+        "sfx": {
+            "name": "Sound Effects Enabled",
+            "description": "If clones should play sound effects (if the selected style has any)\nToggle suggested by Crafty-Jumper.",
+            "type": "bool",
+            "default": true,
+            "enable-if": "enabled"
+        },
+        "styles": {
+            "type": "custom:clone-style",
+            "name": "Clone Style",
+            "description": "How the clones should look.\n **<cy>This only recolors the icon (or applies a shader). This does not change the icon from your current icon.**\nSelecting multiple styles suggested by NonCloud9.",
+            "default": [
+                {
+                    "type": "Cosmic Mario\n(SMG 1)"
+                }
+            ]
+        },
+        "misc-header": {
+            "name": "Miscellaneous Options",
+            "type": "title"
+        },
+        "dev-logging": {
+            "name": "Dev Logging",
+            "description": "Adds logging that I felt was a bit unnecessary to flood logs if you don't intentionally turn this on",
+            "type": "bool",
+            "default": false
+        }
 	}
 }
