@@ -51,6 +51,9 @@
 		"spritesheets": {
 			"spritesheet": [
 				"assets/frames/**/**/*.png"
+			],
+			"BigPortalSheet": [
+				"resources/*.png"
 			]
 		}
 	},
