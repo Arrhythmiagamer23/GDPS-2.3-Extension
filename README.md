@@ -15,6 +15,7 @@ BootDark: Final Dash Orb Object Sprites.<br>
 OmegaFalcon: Spider Dash Orb Sprite.<br>
 iArtie: Random Portals Mod stuff.<br>
 km7dev: Cosmic Clones Stuff.<br>
+ProfDragon: Big Portal from Object Collab.<br>
 
 
 ## Why is it not in the geode index?
