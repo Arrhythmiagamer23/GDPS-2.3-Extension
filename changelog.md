@@ -1,10 +1,7 @@
-# v2.9.0 - Big Portal and Clones Port (Latest)
-Big Portal and Cosmic Clones features are now joining the 2.3 Feature Roster!
-
-# v2.8.0 - Refurbished Graphics in the go (Previous Update)
+# v2.8.0 - Refurbished Graphics in the go (Latest)
 Updated the Image/Label Feature to the latest version.
 
-# v2.7.0 - The Grand Return of the ReverseDir Trigger
+# v2.7.0 - The Grand Return of the ReverseDir Trigger (Previous Update)
 Brought Back the ReverseDir Trigger and Added the Dash Trigger also.
 
 # v2.6.0 - A Classic and Crazy Flashback Fever
