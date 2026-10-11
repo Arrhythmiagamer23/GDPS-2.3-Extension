@@ -1,0 +1,2393 @@
+#include <Geode/Geode.hpp>
+#include <Geode/ui/GeodeUI.hpp>
+using namespace geode::prelude;
+
+#include <Geode/modify/GameManager.hpp>
+
+#include <.hpp>
+
+#include <regex>
+
+#include <roadhogstudios.game-objects-factory-extended/include/main.hpp>
+#include <roadhogstudios.game-objects-factory-extended/include/impl.hpp>
+
+void SetupObjects();
+$on_mod(Loaded) { SetupObjects(); }
+inline void SetupObjects() {
+	static auto plrinputtrigger = GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-input-crtl"), "pd-plr-input-crtl.png",
+		[](EffectGameObject* object, GJBaseGameLayer* game, int, gd::vector<int> const*) {
+			GameOptionsTrigger* options = typeinfo_cast<GameOptionsTrigger*>(object);
+			if (!options) return log::error("options object cast == {} from {}", options, object);
+			//option assignments
+			typedef GameOptionsSetting Is;
+			auto player = options->m_streakAdditive;
+			auto jump = options->m_hideGround;
+			auto left = options->m_hideMG;
+			auto right = options->m_hideP1;
+			//affected players
+			std::vector<Ref<PlayerObject>> ps = { game->m_player1, game->m_player2 };
+			if (player != Is::Disabled) ps = {
+				player == Is::On ? game->m_player1 : game->m_player2
+			};
+			auto pb = &PlayerObject::pushButton;
+			typedef PlayerButton For;
+			//jump
+			if (jump != Is::Disabled) for (auto p : ps) if (p) jump == Is::On ? p->pushButton(For::Jump) : p->releaseButton(For::Jump);
+			//left
+			if (left != Is::Disabled) for (auto p : ps) if (p) left == Is::On ? p->pushButton(For::Left) : p->releaseButton(For::Left);
+			//right
+			if (right != Is::Disabled) for (auto p : ps) if (p) right == Is::On ? p->pushButton(For::Right) : p->releaseButton(For::Right);
+		}
+	)->refID(2899)->insertIndex((12 * 7) + 1)->onEditObject(
+		[](EditorUI* a, GameObject* aa) -> bool {
+			queueInMainThread(
+				[a = Ref(a), aa = Ref(aa)] {
+					if (!CCScene::get()) return log::error("CCScene::get() == {}", CCScene::get());
+					auto popup = CCScene::get()->getChildByType<SetupOptionsTriggerPopup>(0);
+					if (!popup) return log::error("popup == {}", popup);
+					auto object = typeinfo_cast<EffectGameObject*>(aa.data());
+					if (!object) return log::error("object == {} ({})", object, aa);
+
+					auto main = popup->m_mainLayer;
+					auto menu = popup->m_buttonMenu;
+
+					if (auto aaa = main->getChildByType<CCLabelBMFont>(0)) aaa->setString("Extended Player Control");
+
+					//xd
+					if (auto aaa = main->getChildByType<CCLabelBMFont>(6 - 2)) aaa->setString(R"(Only For)");
+					if (auto aaa = main->getChildByType<CCLabelBMFont>(7 - 2)) aaa->setString(R"(P1)");
+					if (auto aaa = main->getChildByType<CCLabelBMFont>(8 - 2)) aaa->setString(R"(P2)");
+					//jump buffer
+					if (auto aaa = main->getChildByType<CCLabelBMFont>(9 - 2)) aaa->setString(R"(jump buffer)");
+					//holding left
+					if (auto aaa = main->getChildByType<CCLabelBMFont>(12 - 2)) aaa->setString(R"(holding left)");
+					//holding right
+					if (auto aaa = main->getChildByType<CCLabelBMFont>(15 - 2)) aaa->setString(R"(holding right)");
+
+					//other shit
+					{
+						auto low_iq = 18;
+						while (auto aaa = main->getChildByType<CCNode>(low_iq++)) aaa->setVisible(false);
+					};
+
+					//other shit in menu
+					{
+						auto low_iq = 13;
+						while (auto aaa = menu->getChildByType<CCNode>(low_iq++)) aaa->setVisible(false);
+					};
+				}
+			);
+			return false;
+		}
+	)->customSetup([](GameObject* a) { if (a) a->m_addToNodeContainer = true; });
+	plrinputtrigger->registerMe();
+
+	static GameObjectsFactory::GameObjectConfig* svcondtrigger = GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("pd-sv-cond-toggle"), "edit_eItemCompBtn_001.png",
+		[](EffectGameObject* object, GJBaseGameLayer* game, int p0, gd::vector<int> const* p1) {
+			if (!object) return;
+			if (!game) return;
+
+			//set:key:value (setups value)
+			auto data = typeinfo_cast<CCNode*>(object->getUserObject("data"_spr));
+			if (!data) return log::error("data == {}", data);
+			auto split = string::split(data->getID(), ":");
+			if (split.size() == 3 and split[0] == "set") {
+				getMod()->getSaveContainer()[GameManager::get()->m_playerName]
+					[split[1]] = matjson::parse(split[2]).unwrapOrDefault();
+			}
+
+			object->m_objectID = svcondtrigger->m_refObjectID;
+			object->triggerObject(game, p0, p1);
+			object->m_objectID = svcondtrigger->m_objectID;
+		}
+	)->refID(1049)->insertIndex(7)->onEditObject(
+		[](EditorUI* a, GameObject* aa) -> bool {
+			if (!a) return false;
+			if (!aa) return false;
+			queueInMainThread(
+				[a = Ref(a), aa = Ref(aa)] {
+					if (!CCScene::get()) return log::error("CCScene::get() == {}", CCScene::get());
+					auto popup = CCScene::get()->getChildByType<SetupObjectTogglePopup>(0);
+					if (!popup) return log::error("popup == {}", popup);
+					auto object = typeinfo_cast<EffectGameObject*>(aa.data());
+					if (!object) return log::error("object == {} ({})", object, aa);
+					auto data = typeinfo_cast<CCNode*>(object->getUserObject("data"_spr));
+					if (!data) return log::error("data == {}", data);
+
+					if (popup->getUserObject("got-custom-setup-for-sv-cond-toggle")) return;
+					popup->setUserObject("got-custom-setup-for-sv-cond-toggle", aa);
+
+					auto main = popup->m_mainLayer;
+					auto menu = popup->m_buttonMenu;
+
+					if (auto aaa = main->getChildByType<CCLabelBMFont>(0)) aaa->setString(" \nSave Value Based\n   Toggle Group");
+
+					if (auto aaa = main->getChildByType<CCLabelBMFont>(-1)) aaa->setVisible(false);
+					if (auto aaa = menu->getChildByType<CCMenuItem>(-1)) aaa->setVisible(false);
+
+					auto input = TextInput::create(228.700f, "asd:=true (key:[!][=,<,>,*][value])\nset:key:value (setups value)", "chatFont.fnt");
+					input->setFilter(" !\"#$ * &'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
+					input->getInputNode()->m_allowedChars = " !\"#$ * &'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+					if (!data->getID().empty()) input->setString(data->getID());
+					input->setPositionY(76.000);
+					input->setCallback(
+						[data = Ref(data)](const std::string& p0) {
+							data->setID(p0);
+						}
+					);
+					popup->m_buttonMenu->addChild(input);
+
+					auto dmpinf = CCMenuItemExt::createSpriteExtra(
+						ButtonSprite::create("dump"), [](void*) {
+							MDPopup::create(
+								"Save container dump",
+								"```\n" + getMod()->getSaveContainer()[GameManager::get()->m_playerName]
+								.dump() + "\n```",
+								"oh wow ok, fk..."
+							)->show();
+						}
+					);
+					dmpinf->setPosition({ 116.000f, 196.000f });
+					popup->m_buttonMenu->addChild(dmpinf);
+				}
+			);
+			return false;
+		}
+	)->customSetup(
+		[](GameObject* object)
+		{
+			if (!object) return object;
+			Ref<CCRepeatForever> action;
+			action = CCRepeatForever::create(CCSequence::create(CallFuncExt::create(
+				[__this = Ref(object), action] {
+					Ref object = typeinfo_cast<EffectGameObject*>(__this.data());
+					if (!object) return GameManager::get()->stopAction(action);
+					Ref data = typeinfo_cast<CCNode*>(object->getUserObject("data"_spr));
+					if (!data) return GameManager::get()->stopAction(action);
+					//data str
+					auto str = data->getID();
+					//update basic stuff
+					if (Ref sub = object->getChildByType<CCSprite>(0)) {
+						sub->setZOrder(1);
+						sub->setScale(0.675f);
+						sub->setPositionY(25.5f);
+						sub->setPositionX(object->getContentSize().width / 2.f);
+						sub->setColor(object->m_activateGroup ?
+							cc3bFromHexString("#00FF28").unwrapOrDefault()
+							: cc3bFromHexString("#FF0049").unwrapOrDefault()
+						); 
+						if (string::contains(str, "set:")) sub->setColor(
+							cc3bFromHexString("#0067FF").unwrapOrDefault()
+						);
+					}
+					//"asd:=true (key:[!][=,<,>,*][value])"
+					if (str.empty()) return;
+					auto split = string::split(str, ":");
+					if (split.size() != 2) return;
+					if (split[0].empty()) return void(); // log::error("split[0].empty()");
+					if (split[1].empty()) return void(); // log::error("split[1].empty()");
+					;;;; std::string key = split[0];
+					;; std::string cond = &split[1].at(0);
+					matjson::Value value = matjson::parse(split[1].substr(1)).unwrapOrDefault();
+					if (key.empty() or cond.empty()) return void(); // log::error("key == {}, cond == {}", key, cond);
+					//log::debug("key == {}, cond == {}, value == {}", key, cond, value.dump());
+					auto sv = getMod()->getSaveContainer()[GameManager::get()->m_playerName]
+						[key];
+					//log::debug("sv == {}", sv.dump());
+					auto inv = string::contains(cond, "!");
+					auto& v = object->m_activateGroup;
+					namespace s = string;
+					if (s::contains(cond, "=")) v = (sv == value) - inv;
+					if (s::contains(cond, "<")) v = (sv < value) - inv;
+					if (s::contains(cond, ">")) v = (sv > value) - inv;
+					if (s::contains(cond, "*")) v = s::contains(sv.dump(), value.dump()) - inv;
+				}), nullptr
+			));
+			if (Ref a = GameManager::get()->m_gameLayer) a->runAction(action);
+			object->setUserObject("data"_spr, CCNode::create());
+			return object;
+		}
+	)->saveString(
+		[](std::string str, GameObject* object, GJBaseGameLayer* level)
+		{
+			if (!object) return gd::string(str.c_str());
+			if (!level) return gd::string(str.c_str());
+			object->m_objectID = svcondtrigger->m_refObjectID;
+			str = string::replace(
+				object->getSaveString(level).c_str(),
+				fmt::format("{},", svcondtrigger->m_refObjectID).c_str(),
+				fmt::format("{},", svcondtrigger->m_objectID).c_str()
+			).c_str();
+			object->m_objectID = svcondtrigger->m_objectID;
+			if (auto data = typeinfo_cast<CCNode*>(object->getUserObject("data"_spr))) {
+				str += ",228,";
+				str += ZipUtils::base64URLEncode(data->getID().c_str()).c_str();
+			}
+			return gd::string(str.c_str());
+		}
+	)->objectFromVector(
+		[](GameObject* object, gd::vector<gd::string>& p0, gd::vector<void*>&, void*, bool)
+		{
+			if (!object) return object;
+			auto data = typeinfo_cast<CCNode*>(object->getUserObject("data"_spr));
+			if (data) data->setID(ZipUtils::base64URLDecode(p0[228].c_str()).c_str());
+			return object;
+		}
+	);
+	svcondtrigger->registerMe();
+
+	GameObjectsFactory::createObjectConfig(UNIQ_ID("player1-model"), "player1-model.png")
+		->tab(6)->resetObject(
+			[](GameObject* a) {
+				a->removeAllChildrenWithCleanup(false);
+				Ref g = GameManager::get()->m_gameLayer;
+				if (!g) return;
+				Ref player = g->m_player1;
+				if (!player) return;
+				Ref layer = player->m_mainLayer;
+				if (layer) {
+					if (!a->m_hasNoEffects) layer->removeFromParentAndCleanup(false);
+					a->addChild(layer);
+					if (!a->m_hasNoEffects) player->addChild(layer); //!!!
+				}
+			}
+		)->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+				a->m_objectType = GameObjectType::Decoration;
+				a->m_isDecoration = true;
+				a->m_isDecoration2 = true;
+				a->setDisplayFrame(a->m_editorEnabled ?
+					a->displayFrame() : CCSprite::createWithSpriteFrameName("30x30empty.png")->displayFrame()
+				);
+			}
+		)->registerMe();
+
+	GameObjectsFactory::createObjectConfig(UNIQ_ID("player2-model"), "player2-model.png")
+		->tab(6)->resetObject(
+			[](GameObject* a) {
+				a->removeAllChildrenWithCleanup(false);
+				Ref g = GameManager::get()->m_gameLayer;
+				if (!g) return;
+				Ref player = g->m_player2;
+				if (!player) return;
+				Ref layer = player->m_mainLayer;
+				if (layer) {
+					if (!a->m_hasNoEffects) layer->removeFromParentAndCleanup(false);
+					a->addChild(layer);
+					if (!a->m_hasNoEffects) player->addChild(layer); //!!!
+				}
+			}
+		)->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+				a->m_objectType = GameObjectType::Decoration;
+				a->m_isDecoration = true;
+				a->m_isDecoration2 = true;
+				a->setDisplayFrame(a->m_editorEnabled ?
+					a->displayFrame() : CCSprite::createWithSpriteFrameName("30x30empty.png")->displayFrame()
+				);
+			}
+		)->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(UNIQ_ID("plr-tw-upd"), "plr-tw-upd.png")
+		->refID(1935)->insertIndex((12 * 5) + 5)->triggerObject(
+			[](EffectGameObject* ob, GJBaseGameLayer* g, int, gd::vector<int> const*) {
+				auto id = ob->m_objectID;
+				ob->m_objectID = 1935;
+				auto sVal = string::split(ob->getSaveString(g), ",120,")[1];
+				ob->m_objectID = id;
+				auto a = utils::numFromString<float>(sVal).unwrapOr(1.0f);
+				for (auto p : { g->m_player1, g->m_player2 }) {
+					if (p) p->m_customScaleY = a;
+				}
+			}
+		)->saveString(
+			[](std::string str, GameObject* ob, GJBaseGameLayer* game) {
+				auto id = ob->m_objectID;
+				ob->m_objectID = 1935;
+				str = ob->getSaveString(game);
+				ob->m_objectID = id;
+				log::debug("{}", str);
+				str = string::replace(str, "1,1935", fmt::format("1,{}", id)).c_str();
+				//120
+				return str;
+			}
+		)->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(UNIQ_ID("plr-tw-rot"), "plr-tw-rot.png")
+		->refID(1935)->insertIndex((12 * 5) + 5)->triggerObject(
+			[](EffectGameObject* ob, GJBaseGameLayer* g, int, gd::vector<int> const*) {
+				auto id = ob->m_objectID;
+				ob->m_objectID = 1935;
+				auto sVal = string::split(ob->getSaveString(g), ",120,")[1];
+				ob->m_objectID = id;
+				auto a = utils::numFromString<float>(sVal).unwrapOr(1.0f);
+				for (auto p : { g->m_player1, g->m_player2 }) {
+					if (p) p->m_customScaleX = a;
+				}
+			}
+		)->saveString(
+			[](std::string str, GameObject* ob, GJBaseGameLayer* game) {
+				auto id = ob->m_objectID;
+				ob->m_objectID = 1935;
+				str = ob->getSaveString(game);
+				ob->m_objectID = id;
+				log::debug("{}", str);
+				str = string::replace(str, "1,1935", fmt::format("1,{}", id)).c_str();
+				//120
+				return str;
+			}
+		)->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("openURL"), "openURL.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			auto xd = MDTextArea::create(fmt::format(
+				"[{0}]({0})", trigger->m_particleString.c_str()
+			), { 122,122 });
+			auto item = findFirstChildRecursive<CCMenuItem>(
+				xd, [](void*) { return true; }
+			);
+			if (item) item->activate();
+		},
+		[](EditTriggersPopup* popup, EffectGameObject* trigger, CCArray* objects)
+		{
+			if (auto title = popup->getChildByType<CCLabelBMFont*>(0)) {
+				title->setString("Open URL");
+				title->setAnchorPoint(CCPointMake(0.5f, 0.3f));
+			}
+			if (auto inf = popup->m_buttonMenu->getChildByType<InfoAlertButton*>(0)) {
+				//inf->setVisible(false);
+				inf->m_description = ""
+					"Links have some special protocols!" "\n"
+					"Use <cg>user:{accountID}</c> to link to a GD account;" "\n"
+					"<cg>level:{id}</c> to link to a GD level and" "\n"
+					"<cg>mod:{id}</c> to link to another Geode mod." "\n"
+					"Or a external link from the internet." "\n"
+					"But, the one rule you should follow for safety for everyone," "\n"
+					"<cr>Don't put links to Viruses or Pornhub or anything that is bad.</c>";
+			}
+
+			auto input = TextInput::create(312.f, "", "chatFont.fnt");
+			input->setFilter(" !\"#$ % &'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
+			input->getInputNode()->m_allowedChars = " !\"#$ % &'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+			input->setString(trigger->m_particleString.c_str());
+			input->setPositionY(55.000f);
+			input->setCallback(
+				[trigger = Ref(trigger)](const std::string& p0) {
+					trigger->m_particleString = p0.c_str();
+				}
+			);
+			input->getBGSprite()->setContentHeight(40.000f);
+			input->getBGSprite()->setAnchorPoint({ 0.5f, 0.550f });
+			popup->m_buttonMenu->addChild(input);
+		}
+	)->saveString(
+		[](std::string str, GameObject* object, GJBaseGameLayer* level)
+		{
+			str += ",228,";
+			str += ZipUtils::base64URLEncode(object->m_particleString).c_str();
+			return str;
+		}
+	)->objectFromVector(
+		[](GameObject* object, gd::vector<gd::string>& p0, gd::vector<void*>&, void*, bool)
+		{
+			object->m_particleString = ZipUtils::base64URLDecode(p0[228]).c_str();
+			return object;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-normal-mode"), "plr-normal-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_uiLayer) a->togglePlatformerMode(false);
+			if (auto a = game->m_player1) a->m_isPlatformer = false;
+			if (auto a = game->m_player2) a->m_isPlatformer = false;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-platformer-mode"), "plr-platformer-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_uiLayer) a->togglePlatformerMode(true);
+			if (auto a = game->m_player1) a->m_isPlatformer = true;
+			if (auto a = game->m_player2) a->m_isPlatformer = true;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-spider-teleport"), "plr-spider-teleport.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->spiderTestJump(true);
+			if (auto a = game->m_player2) a->spiderTestJump(true);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-ship-mode"), "plr-ship-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleFlyMode(true, false);
+			if (auto a = game->m_player2) a->toggleFlyMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-ball-mode"), "plr-ball-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleRollMode(true, false);
+			if (auto a = game->m_player2) a->toggleRollMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-ufo-mode"), "plr-ufo-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleBirdMode(true, false);
+			if (auto a = game->m_player2) a->toggleBirdMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-wave-mode"), "plr-wave-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleDartMode(true, false);
+			if (auto a = game->m_player2) a->toggleDartMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-robot-mode"), "plr-robot-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleRobotMode(true, false);
+			if (auto a = game->m_player2) a->toggleRobotMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-spider-mode"), "plr-spider-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleSpiderMode(true, false);
+			if (auto a = game->m_player2) a->toggleSpiderMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-swing-mode"), "plr-swing-mode.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleSwingMode(true, false);
+			if (auto a = game->m_player2) a->toggleSwingMode(true, false);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-mini-size"), "plr-mini-size.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->togglePlayerScale(a->m_vehicleSize != 0.6f, true);
+			if (auto a = game->m_player2) a->togglePlayerScale(a->m_vehicleSize != 0.6f, true);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-fakecrash"), "plr-fakecrash.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->playDeathEffect();
+			if (auto a = game->m_player2) a->playDeathEffect();
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-fakecrash-p1"), "plr-fakecrash-player1.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->playDeathEffect();
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-fakecrash-p2"), "plr-fakecrash-player2.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player2) a->playDeathEffect();
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();s
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed2"), "plr-speed-normal.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 0.9f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 0.9f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-slow"), "plr-speed-slow.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 0.7f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 0.7f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-superslow"), "plr-speed-superslow.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 0.5f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 0.5f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-double"), "plr-speed-double.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 1.1f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 1.1f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-triple"), "plr-speed-triple.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 1.3f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 1.3f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-quadruple"), "plr-speed-quadruple.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 1.6f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 1.6f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-quintuple"), "plr-speed-quintuple.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 2.0f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 2.0f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-six"), "plr-speed-six.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 2.4f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 2.4f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-speed-pause"), "plr-speed-pause.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_playerSpeed = 0.0f;
+			if (auto a = game->m_player2) a->m_playerSpeed = 0.0f;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("DashTrigger"), "dashTrigger.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->m_isDashing = true;
+			if (auto a = game->m_player2) a->m_isDashing = true;
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("ReverseDir"), "ReverseDir.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->doReversePlayer(!a->m_isFlipX);
+			if (auto a = game->m_player2) a->doReversePlayer(!a->m_isFlipX);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftwidetop"), "crystal_leftwidetop_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftwidebot"), "crystal_leftwidebottom_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftnartop"), "crystal_lefttop_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftnarbot"), "crystal_leftbottom_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_leftoutline"), "crystal_leftoutline_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_midtop"), "crystal_midtop_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_midbot"), "crystal_midbottom_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rightwidetop"), "crystal_rightwidetop_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rightwidebot"), "crystal_rightwidebottom_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_plattop"), "crystal_plattop_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_platbot"), "crystal_platbottom_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_platwall"), "crystal_platwall_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_platwallend"), "crystal_platwallend_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_platwallendoutline"), "crystal_platwallendoutline_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_platwall"), "crystal_platwall_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_wall"), "crystal_wall_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_walloutline"), "crystal_walloutline_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_filler"), "crystal_filler_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_bottom"), "crystal_bottom_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_corner"), "crystal_corner_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_deco1"), "crystaldeco_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_deco1_2"), "crystaldeco_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_deco2"), "crystaldeco2_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_deco3"), "crystaldeco3_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_deco4"), "crystaldeco4_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+	
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rock1"), "crystalrock_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rock2"), "crystalrock_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rock3"), "crystalrock_03_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_rock4"), "crystal_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("firepillar1"), "firepillar_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("firepillar1col2"), "firepillar_01_color_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("firepillar2"), "firepillar_01_002.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("firepillar2col2"), "firepillar_01_color_002.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_flower"), "flowerfloral_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mossbranch"), "mossbranch_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mud1"), "mud_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mud2"), "mud_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mudground"), "mudground_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mudgrass1"), "mudgrass_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_mudgrass2"), "mudgrass_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebbles1"), "pebbles_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebbles2"), "pebbles_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebblesleft1"), "pebblesleft_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebblesleft2"), "pebblesleft_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebblesright1"), "pebblesright_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_pebblesright2"), "pebblesright_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimegroundleft"), "slimegroundleft_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimeground"), "slimeground_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimegroundoutline"), "slimegroundoutline_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimegroundright"), "slimegroundright_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimeleft"), "slimeleft_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("crystal_slimeright"), "slimeright_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel1"), "spinpanel_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel2"), "spinpanel_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel3"), "spinpanel_03_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel4"), "spinpanel_04_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel5"), "spinpanel_05_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("spinpanel6"), "spinpanel_06_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block"), "tig2block.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike"), "tig2spike.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2platform"), "tig2platform.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2blockboss"), "tig2block-horizontal.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-red"), "tig2block-red.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-redoutline"), "tig2block-redoff.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-blue"), "tig2block-blue.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-blueoutline"), "tig2block-blueoff.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-red"), "tig2spike-red.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-redoutline"), "tig2spike-redoff.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-blue"), "tig2spike-blue.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-blueoutline"), "tig2spike-blueoff.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2steel"), "tig2steel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2arrow"), "tig2arrow.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2blockPixel"), "tig2blockPixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2blockPixelsmall"), "tig2blockPixelsmall.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-horizontalPixel"), "tig2block-horizontalPixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-light"), "tig2block-light.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-emerald"), "tig2block-emerald.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-redPixel"), "tig2block-redPixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-bluePixel"), "tig2block-bluePixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2blockNeon"), "tig2blockNeon.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikePixel"), "tig2spikePixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikePixelsmall"), "tig2spikePixelsmall.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-light"), "tig2spike-light.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikeNeon"), "tig2spikeNeon.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikeRuby"), "tig2spikeRuby.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2discoArrow"), "tig2discoArrow.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2discoArrowOutline"), "tig2discoArrowOutline.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2discoArrowGrey"), "tig2discoArrowGrey.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2orb"), "tig2orb.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2arrowPixel"), "tig2arrowPixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat1"), "boat_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2"), "boat_01_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("BoatGlow"), "boat_01_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2-1"), "boat_02_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2-2"), "boat_02_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2-Glow"), "boat_02_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Boat2-Extra"), "boat_02_extra_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Drone1"), "drone_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Drone2"), "drone_01_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("DroneGlow"), "drone_01_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("DroneExtra"), "drone_01_extra_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Minecart1"), "minecart_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Minecart2"), "minecart_01_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("MinecartGlow"), "minecart_01_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("MinecartExtra"), "minecart_01_extra_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Slider1"), "slider_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("Slider2"), "slider_01_2_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("SliderGlow"), "slider_01_glow_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("SliderExtra"), "slider_01_extra_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("GJBeast6"), "GJBeast06.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("GJBeast6glow"), "GJBeast06_01_glow.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("d_animWave_04"), "d_animWave_04.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("d_animWave_04_base"), "d_animWave_04_base_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("GJBeast07"), "GJBeast07_01_looped.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("GJBeast08"), "GJBeast08_01_looped.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("GJBeast09"), "GJBeast09_01.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("camHead"), "camhead001_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("camNeck"), "camneck001_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("camBody"), "cambody001_01_001.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("tig2sawPixel"), "tig2sawPixel.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("tig2saw"), "tig2saw.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("tig2saw-medium"), "tig2saw-medium.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("tig2saw-big"), "tig2saw-big.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("crooked_rays"), "crookedrays_01_001.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+	
+    GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("medium_rays"), "medraysnew_01_001.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("bigsaw1"), "bigsaw1.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("metalsaw1"), "metalsaw1.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco1"), "rotdeco1.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco2"), "rotdeco2.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco3"), "rotdeco3.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco4"), "rotdeco4.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco5"), "rotdeco5.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco6"), "rotdeco6.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco7"), "rotdeco7.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco8"), "rotdeco8.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco9"), "rotdeco9.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco10"), "rotdeco10.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco11"), "rotdeco11.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco12"), "rotdeco12.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco13"), "rotdeco13.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco14"), "rotdeco14.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco15"), "rotdeco15.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco16"), "rotdeco16.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco17"), "rotdeco17.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco18"), "rotdeco18.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco19"), "rotdeco19.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("rotdeco20"), "rotdeco20.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("lightray1"), "lightray1.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("lightray2"), "lightray2.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("clockdeco1"), "clockdeco1.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+	GameObjectsFactory::registerGameObject(GameObjectsFactory::createRotatedConfig(
+        UNIQ_ID("clockdeco2"), "clockdeco2.png",
+        [](GameObject* a) { a->m_addToNodeContainer = true; }
+    ));
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("mushroomdeco1"), "mushroomdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("mushroomdeco2"), "mushroomdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("bushdeco1"), "bushdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("bushdeco2"), "bushdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("treedeco1"), "treedeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("treedeco2"), "treedeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("rockdeco1"), "rockdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("signdeco1"), "signdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("signdeco2"), "signdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("cratedeco1"), "cratedeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("barreldeco1"), "barreldeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("barreldeco2"), "barreldeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("loopdeco"), "loopdeco.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("loopdeco2"), "loopdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-ghost"), "monster-ghost.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-slider"), "monster-slider.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-slidechomper"), "monster-slidechomper.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-round"), "monster-round.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-bush"), "monster-bush.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("monster-cactus"), "monster-cactus.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("pharaohdeco1"), "pharaohdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco1"), "radiodeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco2"), "radiodeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco3"), "radiodeco3.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco4"), "radiodeco4.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco5"), "radiodeco5.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco6"), "radiodeco6.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("radiodeco7"), "radiodeco7.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco1"), "snowdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco2"), "snowdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco3"), "snowdeco3.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco4"), "snowdeco4.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco5"), "snowdeco5.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco6"), "snowdeco6.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowdeco7"), "snowdeco7.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowsignq"), "snowsignq.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("snowsignskull"), "snowsignskull.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("paneldeco1"), "paneldeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("paneldeco2"), "paneldeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tombdoordeco1"), "tombdoordeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("vasedeco1"), "vasedeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("vasedeco1"), "vasedeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("chestdeco1"), "chestdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("flamebarreldeco1"), "flamebarreldeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco1"), "circusdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco2"), "circusdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco3"), "circusdeco3.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco4"), "circusdeco4.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco5"), "circusdeco5.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco6"), "circusdeco6.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco7"), "circusdeco7.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco8"), "circusdeco8.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco9"), "circusdeco9.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco10"), "circusdeco10.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco11"), "circusdeco11.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco12"), "circusdeco12.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco13"), "circusdeco13.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco14"), "circusdeco14.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("circusdeco15"), "circusdeco15.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco1"), "hallowdeco1.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco2"), "hallowdeco2.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco3"), "hallowdeco3.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco4"), "hallowdeco4.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco5"), "hallowdeco5.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco6"), "hallowdeco6.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco7"), "hallowdeco7.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco8"), "hallowdeco8.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco9"), "hallowdeco9.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco10"), "hallowdeco10.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco11"), "hallowdeco11.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("hallowdeco12"), "hallowdeco12.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("barreldeco3"), "barreldeco3.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("viceversa-spiderring"),
+            "viceversa_spiderRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->spiderTestJump(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("minirring"),
+            "miniRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->togglePlayerScale(plr->m_vehicleSize != 0.6f, true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("deathrring"),
+            "deathRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->playerDestroyed(false);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("altGravRing"),
+            "altGravRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->flipGravity(!plr->m_isUpsideDown, true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("cubering"),
+            "cubeRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+				plr->toggleFlyMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleRollMode(false, false); log::info("activated by player, {}, {}", object, plr);
+                plr->toggleSwingMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleBirdMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleDartMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleRobotMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleSpiderMode(false, false); log::info("activated by player, {}, {}", object, plr);
+				plr->toggleSwingMode(false, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("shipring"),
+            "shipRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleFlyMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("rollring"),
+            "rollRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleRollMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("birdring"),
+            "birdRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleBirdMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("dartring"),
+            "dartRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleDartMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("robotring"),
+            "robotRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleRobotMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("spiderchangering"),
+            "spiderchangeRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleSpiderMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("swingring"),
+            "swingRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleSwingMode(true, false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("HideRing"),
+            "HideRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleVisibility(false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("ShowRing"),
+            "ShowRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->toggleVisibility(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("ReverseRing1"),
+            "ReverseRing1.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->doReversePlayer(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("ReverseRing2"),
+            "ReverseRing2.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->doReversePlayer(false); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createRingConfig(
+            UNIQ_ID("OrangeRing"),
+            "OrangeRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->pushPlayer(13); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createDashRingConfig(
+            UNIQ_ID("ReverseDashRing"),
+            "ReverseDashRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->doReversePlayer(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createDashRingConfig(
+            UNIQ_ID("GravReverseDashRing"),
+            "GravReverseDashRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->doReversePlayer(true); log::info("activated by player, {}, {}", object, plr);
+				plr->flipGravity(!plr->m_isUpsideDown, true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createDashRingConfig(
+            UNIQ_ID("SpiderDashRing"),
+            "SpiderDashRing.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->spiderTestJump(true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createPadConfig(
+            UNIQ_ID("GravJumpPad"),
+            "GreenPad.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->flipGravity(!plr->m_isUpsideDown, true); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createPadConfig(
+            UNIQ_ID("DropPad"),
+            "DropPad.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->boostPlayer(-8); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createSpeedPortalConfig(
+            UNIQ_ID("QuintupleSpeed"),
+            "QuintupleSpeed.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->m_playerSpeed = 2.0f; log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createSpeedPortalConfig(
+            UNIQ_ID("QuarterSpeed"),
+            "QuarterSpeed.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->m_playerSpeed = 0.5f; log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createSpeedPortalConfig(
+            UNIQ_ID("SixTimesSpeed"),
+            "6xSpeed.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->m_playerSpeed = 2.4f; log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createSpeedPortalConfig(
+            UNIQ_ID("PauseSpeed"),
+            "PauseSpeed.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->m_playerSpeed = 0.0f; log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createGravityPortalConfig(
+            UNIQ_ID("gravityJumpPortal"),
+            "gravityJumpPortal.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+				plr->updateJump(5); log::info("activated by player, {}, {}", object, plr);
+				plr->updateJump(5); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createGamemodePortalConfig(
+            UNIQ_ID("randomPortal"),
+            "randomPortal.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+				plr->playBurstEffect(); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("redCandy"), "RedCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("orangeCandy"), "OrangeCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("yellowCandy"), "YellowCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("greenCandy"), "GreenCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("cyanCandy"), "CyanCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("cyanDonutCandy"), "CyanDonutCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("blueCandy"), "BlueCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("purpleCandy"), "PurpleCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("darkPurpleCandy"), "DarkPurpleCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("darkBlueCandy"), "DarkBlueCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("whiteCandy"), "WhiteCandy.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("rainbowChocolate"), "RainbowChocolate.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("custom-shader"), "edit_eShaderCustomBtn_001.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			auto url = trigger->m_particleString.c_str();
+			Ref program = CCShaderCache::sharedShaderCache()->programForKey(url);
+			if (program) {
+				if (Ref shaderLayer = game->m_shaderLayer) {
+					shaderLayer->m_sprite->setShaderProgram(program);
+				}
+				else log::error("game->m_shaderLayer = {}", game->m_shaderLayer);
+				program->updateUniforms();
+			}
+			else log::error("shader program ({}) = {}", url, game->m_shaderLayer);
+		},
+		[](EditTriggersPopup* popup, EffectGameObject* trigger, CCArray* objects)
+		{
+			if (auto title = popup->getChildByType<CCLabelBMFont*>(0)) {
+				title->setString("\n \nApply Shader From URL\n (WIP and Experimental)");
+				title->setAnchorPoint(CCPointMake(0.5f, 0.3f));
+			}
+			if (auto inf = popup->m_buttonMenu->getChildByType<InfoAlertButton*>(0)) {
+				//inf->setVisible(false);
+				inf->m_description = ""
+					"Activate this trigger at active shader to apply custom shader program from url on it. (Work in progress and experimental)";
+			}
+
+			auto input = TextInput::create(312.f, "fragment-shader.txt link", "chatFont.fnt");
+			input->setFilter(" !\"#$ % &'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
+			input->getInputNode()->m_allowedChars = " !\"#$ % &'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+			input->setString(trigger->m_particleString.c_str());
+			input->setPositionY(55.000f);
+			input->setCallback(
+				[trigger = Ref(trigger)](const std::string& p0) {
+					trigger->m_particleString = p0.c_str();
+				}
+			);
+			input->getBGSprite()->setContentHeight(40.000f);
+			input->getBGSprite()->setAnchorPoint({ 0.5f, 0.550f });
+			popup->m_buttonMenu->addChild(input);
+		}
+	
+	)->customSetup(
+		[](GameObject* a) {
+			if (a) a->m_addToNodeContainer = true;
+		}
+	)->saveString(
+		[](std::string str, GameObject* object, GJBaseGameLayer* level)
+		{
+			str += ",228,";
+			str += ZipUtils::base64URLEncode(object->m_particleString).c_str();
+			return str;
+		}
+	)->objectFromVector(
+		[](GameObject* object, gd::vector<gd::string>& p0, gd::vector<void*>&, void*, bool)
+		{
+			object->m_particleString = ZipUtils::base64URLDecode(p0[228]).c_str();
+			return object;
+		}
+	)->resetObject(
+		[](GameObject* object) {
+			std::string url = object->m_particleString.c_str();
+			if (CCShaderCache::sharedShaderCache()->programForKey(url.c_str())) return;
+			std::smatch matches;
+			if (std::regex_match(url, matches, std::regex(R"(^(https?)://([^/]+)(.*)$)"))) {
+				std::string scheme = matches[1];
+				std::string host = matches[2];
+				std::string path = matches[3].str();
+				if (path.empty()) path = "/";
+
+				log::info("Downloading: {}://{}{}", scheme, host, path);
+
+				std::shared_ptr<httplib::Client> cli;
+
+				cli = std::make_shared<httplib::Client>(host);
+
+				cli->set_follow_location(true);
+				cli->set_connection_timeout(30);
+				cli->set_read_timeout(30);
+
+				auto res = cli->Get(path.c_str());
+
+				if (!res) {
+					createQuickPopup(
+						"Failed to download:", httplib::to_string(res.error()), 
+						"OK", nullptr, nullptr
+					);
+					return log::error("Request failed: {}", httplib::to_string(res.error()));
+				}
+				if (res->status != 200) return log::error("HTTP error: {}", res->status);
+
+				log::info("Downloaded {} bytes", res->body.size());
+
+				Ref<CCGLProgram> program = new CCGLProgram();
+				program->initWithVertexShaderByteArray(R"(
+attribute vec4 a_position;
+attribute vec2 a_texCoord;
+attribute vec4 a_color;
+varying vec4 v_fragmentColor;
+varying vec2 v_texCoord;
+void main() {
+	gl_Position = CC_MVPMatrix * a_position;
+	v_fragmentColor = a_color;
+	v_texCoord = a_texCoord;
+})", res->body.c_str());
+				program->addAttribute(kCCAttributeNameColor, kCCVertexAttrib_Color);
+				program->addAttribute(kCCAttributeNamePosition, kCCVertexAttrib_Position);
+				program->addAttribute(kCCAttributeNameTexCoord, kCCVertexAttrib_TexCoords);
+				program->link();
+				program->updateUniforms();
+
+				CCShaderCache::sharedShaderCache()->addProgram(program, url.c_str());
+			}
+		}
+	)->registerMe();
+}
+
+#include <Geode/modify/EffectGameObject.hpp>
+class $modify(MenuItemGameObject, EffectGameObject) {
+
+	class CCMenuItem : public CCMenuItemSpriteExtra {
+	public:
+		CREATE_FUNC(CCMenuItem);
+		virtual bool init() {
+			CCMenuItemSpriteExtra::init(CCNode::create(), CCNode::create(), nullptr, nullptr);
+			this->setAnchorPoint({ 0.5f, 0.5f });
+			this->setEnabled(true);
+			m_animationEnabled = false;
+			m_colorEnabled = false;
+			m_activateSound = "no sound";
+			m_selectSound = "no sound";
+			return true;
+		};
+		std::function<void(void)> m_onActivate = []() {};
+		std::function<void(void)> m_onSelected = []() {};
+		std::function<void(void)> m_onUnselected = []() {};
+		virtual void activate() { if (m_onActivate) m_onActivate(); };
+		virtual void selected() { if (m_onSelected) m_onSelected(); };
+		virtual void unselected() { if (m_onUnselected) m_onUnselected(); };
+		auto onActivate(std::function<void(void)> onActivate) { m_onActivate = onActivate; return this; }
+		auto onSelected(std::function<void(void)> onSelected) { m_onSelected = onSelected; return this; }
+		auto onUnselected(std::function<void(void)> onUnselected) { m_onUnselected = onUnselected; return this; }
+	};
+
+#define MenuItemObjectData(ring) DataNode::at(ring, "menu-item-data")
+	inline static GameObjectsFactory::GameObjectConfig* conf;
+
+	static void setupMenuItemPopup(EditorUI*, EffectGameObject * obj, SetupCollisionStateTriggerPopup * popup) {
+
+		if (popup->getUserObject("got-custom-setup-for-menu-item")) return;
+		popup->setUserObject("got-custom-setup-for-menu-item", obj);
+
+		auto main = popup->m_mainLayer;
+		auto menu = popup->m_buttonMenu;
+		if (auto aaa = main->getChildByType<CCLabelBMFont>(0)) aaa->setString("Menu Item");
+
+		if (auto aaa = main->getChildByType<CCLabelBMFont>(1)) aaa->setVisible(false);
+		if (auto aaa = main->getChildByType<CCLabelBMFont>(2)) aaa->setVisible(false);
+		if (auto aaa = main->getChildByType<CCScale9Sprite>(1)) aaa->setVisible(false);
+		if (auto aaa = main->getChildByType<CCScale9Sprite>(2)) aaa->setVisible(false);
+		if (auto aaa = main->getChildByType<CCTextInputNode>(0)) aaa->setVisible(false);
+		if (auto aaa = main->getChildByType<CCTextInputNode>(1)) aaa->setVisible(false);
+
+		while (auto aaa = menu->getChildByTag(51)) aaa->removeFromParentAndCleanup(false);
+		while (auto aaa = menu->getChildByTag(71)) aaa->removeFromParentAndCleanup(false);
+
+		auto data = MenuItemObjectData(obj);
+
+		//activate
+		auto activate = TextInput::create(52.f, "ID");
+		activate->setFilter("0123456789");
+		activate->getInputNode()->m_allowedChars = "0123456789";
+		activate->setString(utils::numToString(data->get("activate").asInt().unwrapOr(0)));
+		activate->setPositionY(95.000f);
+		activate->setCallback(
+			[data = Ref(MenuItemObjectData(obj))](const std::string& p0) {
+				data->set("activate", utils::numFromString<int>(p0).unwrapOr(0));
+			}
+		);
+		menu->addChild(activate);
+		auto activateLabel = CCLabelBMFont::create("Activate:\n \n \n \n ", "goldFont.fnt");
+		activateLabel->setScale(0.5f);
+		activate->getInputNode()->addChild(activateLabel);
+
+		//selected
+		auto selected = TextInput::create(54.f, "ID");
+		selected->setFilter("0123456789");
+		selected->getInputNode()->m_allowedChars = "0123456789";
+		selected->setString(utils::numToString(data->get("selected").asInt().unwrapOr(0)));
+		selected->setPosition(-95.000f, 77.f);
+		selected->setCallback(
+			[data = Ref(MenuItemObjectData(obj))](const std::string& p0) {
+				data->set("selected", utils::numFromString<int>(p0).unwrapOr(0));
+			}
+		);
+		menu->addChild(selected);
+		auto selectedLabel = CCLabelBMFont::create("Selected:\n \n \n \n ", "goldFont.fnt");
+		selectedLabel->setScale(0.5f);
+		selected->getInputNode()->addChild(selectedLabel);
+
+		//unselected
+		auto unselected = TextInput::create(48.f, "ID");
+		unselected->setFilter("0123456789");
+		unselected->getInputNode()->m_allowedChars = "0123456789";
+		unselected->setString(utils::numToString(data->get("unselected").asInt().unwrapOr(0)));
+		unselected->setPosition(95.000f, 77.f);
+		unselected->setCallback(
+			[data = Ref(MenuItemObjectData(obj))](const std::string& p0) {
+				data->set("unselected", utils::numFromString<int>(p0).unwrapOr(0));
+			}
+		);
+		menu->addChild(unselected);
+		auto unselectedLabel = CCLabelBMFont::create("Unselected:\n \n \n \n ", "goldFont.fnt");
+		unselectedLabel->setScale(0.5f);
+		unselected->getInputNode()->addChild(unselectedLabel);
+	}
+
+	static void setup() {
+		conf = GameObjectsFactory::createRingConfig(
+			UNIQ_ID("menu-item"), "menu-item.png"
+		)->refID(3640)->tab(12)->insertIndex((12 * 6) + 3)->onEditObject(
+			[](EditorUI* a, GameObject* aa) -> bool {
+				queueInMainThread(
+					[a = Ref(a), aa = Ref(aa)] {
+						if (!CCScene::get()) return log::error("CCScene::get() == {}", CCScene::get());
+						auto popup = CCScene::get()->getChildByType<SetupCollisionStateTriggerPopup>(0);
+						if (!popup) return log::error("popup == {}", popup);
+						auto object = typeinfo_cast<EffectGameObject*>(aa.data());
+						if (!object) return log::error("object == {} ({})", object, aa);
+						setupMenuItemPopup(a, object, popup);
+					}
+				);
+				return false;
+			}
+		)->saveString(
+			[](std::string str, GameObject* object, GJBaseGameLayer* level)
+			{
+				str += ",228,";
+				str += ZipUtils::base64URLEncode(MenuItemObjectData(object)->_json_str.c_str()).c_str();
+				return str;
+			}
+		)->objectFromVector(
+			[](GameObject* object, gd::vector<gd::string>& p0, gd::vector<void*>& p1, GJBaseGameLayer* p2, bool p3)
+			{
+				auto parsed = matjson::parse(
+					ZipUtils::base64URLDecode(p0[228].c_str()).c_str()
+				).unwrapOrDefault();
+				for (auto& [key, value] : parsed) MenuItemObjectData(object)->set(key, value);
+				return object;
+			}
+		)->customSetup(
+			[](GameObject* object) {
+				object->m_addToNodeContainer = true;
+				object->m_outerSectionIndex = -1;
+				object->m_isInvisible = false;
+				object->setDisplayFrame(object->m_editorEnabled ?
+					object->displayFrame() : CCSprite::create()->displayFrame()
+				);
+			}
+		)->resetObject(
+			[](GameObject* pObj) {
+				if (!GameManager::get()->m_gameLayer) return;
+				Ref game(GameManager::get()->m_gameLayer);
+
+				Ref object(pObj);
+
+				int uid = hash(object->getSaveString(game).c_str());
+				object->setTag(uid);
+
+				Ref menu = typeinfo_cast<CCMenu*>(game->getUserObject("objects-menu"));
+				if (!menu) {
+					menu = CCMenu::create();
+					menu->setID("objects-menu");
+					menu->setPosition(CCSizeZero);
+					menu->setContentSize(CCSizeZero);
+					menu->setAnchorPoint(CCPointZero);
+					game->setUserObject("objects-menu", menu);
+					game->m_uiTriggerUI->addChild(menu);
+				}
+
+				while (menu->getChildByTag(uid)) menu->removeChildByTag(uid);
+
+				Ref item = CCMenuItem::create();
+				if (item) {
+					typedef gd::vector<int> xd;
+					//virtual void spawnGroup(int group, bool ordered, double delay, gd::vector<int> const& remapKeys, int triggerID, int controlID);
+					item->onActivate([game = Ref(GameManager::get()->m_gameLayer), data = Ref(MenuItemObjectData(object))] {
+						if (game) game->spawnGroup(data->get("activate").asInt().unwrapOr(0), false, 0, gd::vector<int>(), -1, -1);
+						});
+					item->onSelected([game = Ref(GameManager::get()->m_gameLayer), data = Ref(MenuItemObjectData(object))] {
+						if (game) game->spawnGroup(data->get("selected").asInt().unwrapOr(0), false, 0, gd::vector<int>(), -1, -1);
+						});
+					item->onUnselected([game = Ref(GameManager::get()->m_gameLayer), data = Ref(MenuItemObjectData(object))] {
+						if (game) game->spawnGroup(data->get("unselected").asInt().unwrapOr(0), false, 0, gd::vector<int>(), -1, -1);
+						});
+					item->setUserObject("menu-item-object", object);
+					item->setTag(uid);
+				}
+				else return;
+				menu->setTouchEnabled(false);
+				menu->setTouchEnabled(true);
+
+				Ref action = menu->getActionByTag(uid);
+				if (!action) {
+					action = CCRepeatForever::create(CCSequence::create(CallFuncExt::create(
+						[object, item, menu, game] {
+							if (!game) return;
+							if (!object) return;
+							if (!item) return;
+							if (!menu) return;
+							if (item->getParent() != menu) {
+								item->removeFromParentAndCleanup(false);
+								menu->addChild(item);
+								menu->setTouchEnabled(false);
+								menu->setTouchEnabled(true);
+							}
+							menu->setVisible(game->m_uiLayer->isVisible());
+							item->setContentWidth(object->m_width);
+							item->setContentHeight(object->m_height);
+							item->setAnchorPoint(CCPointMake(0.5, 0.5) * not object->m_editorEnabled);
+							item->setAdditionalTransform(CCAffineTransformConcat(
+								object->nodeToWorldTransform(),
+								CCAffineTransformInvert(menu->nodeToWorldTransform())
+							));
+							item->updateTransform();
+						}
+					), nullptr));
+					action->setTag(uid);
+					menu->runAction(action);
+				}
+			}
+		);
+		conf->registerMe();
+	}
+	static void onModify(auto&) { setup(); }
+
+	virtual void resetObject() {
+		EffectGameObject::resetObject();
+	};
+
+};
+
+#include <Geode/modify/UILayer.hpp>
+class $modify(UILayerKeysExt, UILayer) {
+	void customUpdate(float) {
+		this->setKeyboardEnabled(false);
+		this->setKeyboardEnabled(this->isVisible());
+	}
+	bool init(GJBaseGameLayer * p0) {
+		if (!UILayer::init(p0)) return false;
+		this->schedule(schedule_selector(UILayerKeysExt::customUpdate));
+		return true;
+	};
+	void handleKeypress(cocos2d::enumKeyCodes key, bool p1, double timestamp) {
+		UILayer::handleKeypress(key, p1, timestamp);
+
+		auto eventID = 120000 + (int)key;
+		m_gameLayer->gameEventTriggered((GJGameEvent)eventID, 0, 0);
+		m_gameLayer->gameEventTriggered((GJGameEvent)eventID, 0, 1 + !p1);
+	}
+};
+
+#include <Geode/modify/GJBaseGameLayer.hpp>
+class $modify(EventsExt, GJBaseGameLayer) {
+	inline static int _s = 78;
+	inline static int OnForce = _s + 1;
+	inline static int OnSpeedModifer = _s + 2;
+	inline static int OnInverted = _s + 3;
+	inline static int OnUninverted = _s + 4;
+	inline static int CollisionTop = _s + 5;
+	inline static int CollisionBottom = _s + 6;
+	inline static int CollisionLeft = _s + 7;
+	inline static int CollisionRight = _s + 8;
+	static gd::string gameEventToString(GJGameEvent event) {
+		auto id = (int)event;
+		if (id == OnForce) return "NO IMPL'// On Force";
+		if (id == OnSpeedModifer) return "NO IMPL'//On Speed Modifer";
+		if (id == OnInverted) return "NO IMPL'//On Inverted";
+		if (id == OnUninverted) return "NO IMPL'//On Un-inverted";
+		if (id == CollisionTop) return "NO IMPL'//Collision Top";
+		if (id == CollisionBottom) return "NO IMPL'//Collision Bottom";
+		if (id == CollisionLeft) return "NO IMPL'//Collision Left";
+		if (id == CollisionRight) return "NO IMPL'//Collision Right";
+		return GJBaseGameLayer::gameEventToString(event);
+	}
+};
+
+#include <Geode/modify/SelectEventLayer.hpp>
+class $modify(SelectEventLayerKeysExt, SelectEventLayer) {
+	void addToggle(int id, gd::string info) {
+		SelectEventLayer::addToggle(id, info);
+		if (id != 78) return;
+		//wth... static gd::string GJBaseGameLayer::gameEventToString(GJGameEvent event);
+		SelectEventLayer::addToggle(EventsExt::OnForce, "Activate a group when touching a force block");
+		SelectEventLayer::addToggle(EventsExt::OnSpeedModifer, "Activate a group when touching any speed modifer");
+		SelectEventLayer::addToggle(EventsExt::OnInverted, "Activate a group when camera is reverted");
+		SelectEventLayer::addToggle(EventsExt::OnUninverted, "Activate a group when camera is reverted");
+		SelectEventLayer::addToggle(EventsExt::CollisionTop, "Activate a group when player update collision in top direction");
+		SelectEventLayer::addToggle(EventsExt::CollisionBottom, "Activate a group when player update collision in bottom direction");
+		SelectEventLayer::addToggle(EventsExt::CollisionLeft, "Activate a group when player update collision in left direction");
+		SelectEventLayer::addToggle(EventsExt::CollisionRight, "Activate a group when player update collision in right direction");
+	}
+	bool init(SetupEventLinkPopup * p0, gd::set<int>&p1) {
+		if (!SelectEventLayer::init(p0, p1)) return false;
+
+		auto keyEventsExpandBtn = CCMenuItemExt::createToggler(
+			ButtonSprite::create("Keys", "goldFont.fnt", "GJ_button_04.png", 0.6f),
+			ButtonSprite::create("Keys", "goldFont.fnt", "GJ_button_02.png", 0.6f),
+			[popup = Ref(this)](CCMenuItemToggler* keyEventsExpandBtn) {
+
+				while (auto a = popup->m_buttonMenu->getChildByID("key-list-item")) a->removeFromParent();
+				while (auto a = popup->getChildByType<KeyEventListener>(0)) a->removeFromParent();
+
+				if (!keyEventsExpandBtn->isOn()) return;
+
+				auto posY = keyEventsExpandBtn->getPositionY() + keyEventsExpandBtn->getContentSize().height + 4.f;
+
+				for (auto eventID : popup->m_eventIDs) if (eventID >= 120000 and eventID < 130000) {
+					std::string name = CCKeyboardDispatcher::get()->keyToString((enumKeyCodes)(eventID - 120000));
+					auto item = CCMenuItemExt::createSpriteExtra(
+						ButtonSprite::create((" " + name + " ").c_str(), "goldFont.fnt", "GJ_button_05.png", 0.5f)
+						, [popup, eventID, keyEventsExpandBtn](void*) {
+							popup->m_eventIDs.erase(eventID);
+							popup->m_eventsChanged = true;
+							keyEventsExpandBtn->activate();
+							keyEventsExpandBtn->activate();
+						}
+					);
+					item->setID("key-list-item");
+					item->setPositionY(posY);
+					item->setPositionX(keyEventsExpandBtn->getPositionX());
+					popup->m_buttonMenu->addChild(item, 999);
+
+					posY += item->getContentSize().height + 4.f;
+				}
+
+				auto inf = CCLabelBMFont::create(" \nPress any key...", "chatFont.fnt");
+				inf->setID("key-list-item");
+				inf->setScale(0.625f);
+				inf->setZOrder(999);
+				popup->m_buttonMenu->addChildAtPosition(
+					inf, Anchor::BottomLeft, { keyEventsExpandBtn->getPositionX(), posY }, false
+				);
+
+				popup->addChild(KeyEventListener::create()->onKeyDown(
+					[popup, keyEventsExpandBtn](enumKeyCodes key) {
+						popup->m_eventIDs.insert(120000 + (int)key);
+						popup->m_eventsChanged = true;
+						keyEventsExpandBtn->activate();
+						keyEventsExpandBtn->activate();
+					}
+				), 999);
+			}
+		);
+		keyEventsExpandBtn->setID("key-events-expand-btn");
+		keyEventsExpandBtn->setPositionX(142.000f);
+		keyEventsExpandBtn->setPositionY(0.f);
+		keyEventsExpandBtn->activate();
+		Ref(this)->m_buttonMenu->addChild(keyEventsExpandBtn);
+
+		return true;
+	}
+};
+
+
+#include <Geode/modify/LevelEditorLayer.hpp>
+class $modify(LevelEditorLayerExt, LevelEditorLayer) {
+	void onPlaytest() {
+		LevelEditorLayer::onPlaytest();
+	}
+	virtual void playerTookDamage(PlayerObject * player) {
+		LevelEditorLayer::playerTookDamage(player);
+	}
+};
+
+#include <Geode/modify/GJBaseGameLayer.hpp>
+class $modify(GJBaseGameLayerExt, GJBaseGameLayer) {
+	void resetPlayer() {
+		GJBaseGameLayer::resetPlayer();
+		for (auto p : { this->m_player1, this->m_player2 }) {
+			if (p) p->m_customScaleX = 1.f;
+			if (p) p->m_customScaleY = 1.f;
+		}
+	}
+};
+
+#include <Geode/modify/PlayerObject.hpp>
+class $modify(PlayerObjectExt, PlayerObject) {
+	void updateCollide(PlayerCollisionDirection direction, GameObject * object) {
+		PlayerObject::updateCollide(direction, object);
+		if (auto a = m_gameLayer) a->gameEventTriggered(
+			(GJGameEvent)(EventsExt::CollisionTop + (int)direction), 
+			0, 1 + a->m_player2 == this
+		);
+	};
+	//bool collidedWithObject(float dt, GameObject* object, cocos2d::CCRect rect, bool skipCheck) {};
+	bool init(int p0, int p1, GJBaseGameLayer * p2, cocos2d::CCLayer * p3, bool p4) {
+		if (!PlayerObject::init(p0, p1, p2, p3, p4)) return false;
+
+		queueInMainThread(
+			[_this = Ref(this), p2 = Ref(p2)] {
+				if (!typeinfo_cast<LevelEditorLayer*>(p2.data())) return;
+				if (_this == p2->m_player1) _this->addAllParticles();
+				if (_this == p2->m_player2) _this->addAllParticles();
+			}
+		);
+
+		return true;
+	}
+	void resetObject() {
+		PlayerObject::resetObject();
+		setVisible(1);
+		m_customScaleY = 1.f;
+		m_customScaleX = 1.f;
+	}
+	void resetPlayerIcon() {
+		PlayerObject::resetPlayerIcon();
+	}
+	void update(float p0) {
+		PlayerObject::update(p0 * (m_customScaleY > 0.001 ? m_customScaleY : 1.f));
+	}
+	void updateRotation(float p0) {
+		PlayerObject::updateRotation(p0 * (m_customScaleX > 0.001 ? m_customScaleX : 1.f));
+	}
+};
+
+
+#include <Geode/modify/EffectGameObject.hpp>
+class $modify(EffectGameObjectExt, EffectGameObject) {
+	void customSetup() {
+		EffectGameObject::customSetup();
+	}
+	void triggerActivated(float p0) {
+		EffectGameObject::triggerActivated(p0);
+	}
+	void triggerObject(GJBaseGameLayer * p0, int p1, gd::vector<int> const* p2) {
+		if (m_objectID == 1613 or m_objectID == 1612) {
+			if (m_hasNoEffects) {
+				//show fully
+				auto oldid = m_objectID;
+				m_objectID = 1613;
+				EffectGameObject::triggerObject(p0, p1, p2);
+				m_objectID = oldid;
+				//hide as node
+				for (auto p : { p0->m_player1, p0->m_player2 }) if (p) {
+					p->setVisible(m_objectID == 1613); //is show?
+				}
+				if (m_objectID == 1612) return; //no default hide beh
+			}
+			for (auto p : { p0->m_player1, p0->m_player2 }) p->setVisible(1);
+		}
+		EffectGameObject::triggerObject(p0, p1, p2);
+	}
+};
+
+#include <Geode/modify/CustomizeObjectLayer.hpp>
+class $modify(CustomizeObjectLayerExt, CustomizeObjectLayer) {
+	bool init(GameObject * object, cocos2d::CCArray * objects) {
+		if (!CustomizeObjectLayer::init(object, objects)) return false;
+		if (auto a = m_mainLayer->getChildByType<CCScale9Sprite>(0)) a->setOpacity(0);
+		if (Ref input = m_textInput) {
+			input->setAllowedChars("\n\t !\"#$ * &'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
+			input->setMaxLabelLength(255);
+			Ref tip = SimpleTextArea::create(
+				"\n \n \nYou can turn this label to IMAGE!\nJust put here texture/frame name or image url."
+			);
+			tip->setAlignment(kCCTextAlignmentCenter);
+			tip->setPositionY(-34.000f);
+			tip->setScale(0.650f);
+			tip->setID("image-tip");
+			input->addChild(tip, 1, "image-tip"_h);
+			if (auto menu = querySelector("clear-text-menu")) {
+				//explorer
+				auto explorer = CCMenuItemExt::createSpriteExtraWithFrameName(
+					"gj_findBtn_001.png", 0.75, [input](void*) {
+						auto pop = MDPopup::create("", "", "");
+						pop->m_mainLayer->setContentHeight(262.000f);
+						pop->m_mainLayer->updateLayout();
+						pop->m_mainLayer->getChildByIndex(0)->setVisible(false);
+						pop->m_buttonMenu->getChildByIndex(0)->setVisible(true);
+						pop->m_buttonMenu->getChildByIndex(1)->setVisible(false);
+						pop->show();
+						auto scroll = ScrollLayer::create(pop->m_mainLayer->getContentSize());
+						scroll->setScale(0.900f);
+						pop->m_mainLayer->addChild(scroll);
+						auto exmenu = CCMenu::create();
+						exmenu->setContentSize(pop->m_mainLayer->getContentSize());
+						for (auto frame : CCDictionaryExt<std::string, CCSpriteFrame*>(
+							CCSpriteFrameCache::get()->m_pSpriteFrames
+						)) {
+							auto exitem = CCMenuItemExt::createSpriteExtraWithFrameName(
+								frame.first.c_str(), 0.5f
+								, [scroll, frame, input](void*) {
+									input->setString(frame.first.c_str());
+								}
+							);
+							exitem->setID("explorer-item");
+							exitem->m_animationEnabled = 0;
+							exitem->m_colorEnabled = 1;
+							limitNodeSize(exitem, { 50.000, 50.000 }, 1.f, 0.1f);
+							exmenu->addChild(exitem);
+						}
+						exmenu->setLayout(RowLayout::create()
+							->setCrossAxisOverflow(true)
+							->setGrowCrossAxis(true)
+						);
+						exmenu->setPosition(CCPointZero);
+						exmenu->setAnchorPoint(CCPointZero);
+						scroll->m_contentLayer->setOpacity(120);
+						scroll->m_contentLayer->addChild(exmenu);
+						scroll->m_contentLayer->setContentSize(exmenu->getContentSize());
+						handleTouchPriority(exmenu);
+						handleTouchPriority(scroll);
+						auto bar = Scrollbar::create(scroll);
+						bar->setAnchorPoint({ 1.f, 0.f });
+						pop->m_mainLayer->addChild(bar);
+					}
+				);
+				explorer->setID("explorer");
+				menu->addChild(explorer);
+				//upload
+				auto upload = CCMenuItemExt::createSpriteExtraWithFrameName(
+					"GJ_plus3Btn_001.png", 1.0, [](void*) {
+						CCApplication::get()->openURL("https://imgbox.com");
+					}
+				);
+				upload->setID("upload");
+				upload->setPositionX(30.000f);
+				menu->addChild(upload);
+			}
+		}
+		return true;
+	}
+};
+
+#include <Geode/modify/TextGameObject.hpp>
+class $modify(TextGameObjectImageExt, TextGameObject) {
+	bool containsUrl(const std::string & str) {
+		std::regex url_pattern(
+			R"((https?://|www\.)[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+([/?#].*)?)",
+			std::regex_constants::icase
+		);
+
+		return std::regex_search(str, url_pattern);
+	}
+	CCSpriteFrame* tryGetSpriteFrame() {
+		auto name = std::string(m_text.c_str());
+
+		if (CCSpriteFrameCache::get()->m_pSpriteFrames->objectForKey(name.c_str())) {
+			auto spr = CCSprite::createWithSpriteFrameName(name.c_str());
+			return (spr ? spr : CCSprite::create())->displayFrame();
+		}
+
+		if (fileExistsInSearchPaths(name.c_str())) {
+			auto spr = CCSprite::create(name.c_str());
+			return (spr ? spr : CCSprite::create())->displayFrame();
+		}
+
+		std::smatch matches;
+		if (std::regex_match(name, matches, std::regex(R"(^(https?)://([^/]+)(.*)$)"))) {
+			std::string scheme = matches[1];
+			std::string host = matches[2];
+			std::string path = matches[3].str();
+			if (path.empty()) path = "/";
+
+			log::info("Downloading: {}://{}{}", scheme, host, path);
+
+			std::shared_ptr<httplib::Client> cli;
+
+			cli = std::make_shared<httplib::Client>(host);
+
+			cli->set_follow_location(true);
+			cli->set_connection_timeout(30);
+			cli->set_read_timeout(30);
+
+			auto res = cli->Get(path.c_str());
+
+			if (!res) {
+				log::error("Request failed: {}", httplib::to_string(res.error()));
+				createQuickPopup(
+					"Failed to download:", httplib::to_string(res.error()),
+					"OK", nullptr, nullptr
+				);
+				return nullptr;
+			}
+
+			if (res->status != 200) {
+				log::error("HTTP error: {}", res->status);
+				return nullptr;
+			}
+
+			log::info("Downloaded {} bytes", res->body.size());
+
+			auto image = new CCImage();
+			if (!image->initWithImageData((void*)res->body.data(), res->body.size())) {
+				image->release();
+				log::error("Failed to parse image");
+				return nullptr;
+			}
+
+			auto texture = CCTextureCache::get()->addUIImage(image, name.c_str());
+			image->release();
+
+			if (!texture) {
+				log::error("Failed to create texture");
+				return nullptr;
+			}
+
+			auto frame = CCSpriteFrame::createWithTexture(
+				texture,
+				CCRect(0, 0, texture->getContentSize().width, texture->getContentSize().height)
+			);
+
+			if (frame) {
+				frame->retain();
+				CCSpriteFrameCache::get()->addSpriteFrame(frame, name.c_str());
+				log::info("Image loaded successfully!");
+				return frame;
+			}
+
+			return nullptr;
+		}
+
+		return nullptr;
+	}
+	void trySetupCustomSprite(float = 0.f) {
+		if (!this) return;
+		if (auto frame = tryGetSpriteFrame()) {
+			for (auto c : getChildrenExt()) c->setVisible(false);
+			removeChildByTag("image"_h);
+
+			setContentSize({ 30.f, 30.f });
+
+			auto image = CCSprite::createWithSpriteFrame(frame);
+			limitNodeSize(image, getContentSize(), 1337.f, 0.0f);
+
+			image->setPosition(this->getContentSize() / 2);
+			image->setColor(this->getColor());
+			image->setOpacity(this->getOpacity());
+			this->addChild(image, 1, "image"_h);
+		}
+		else {
+			for (auto c : getChildrenExt()) c->setVisible(true);
+			removeChildByTag("image"_h);
+		}
+		m_width = getContentWidth();
+		m_height = getContentHeight();
+		updateOrientedBox();
+	}
+	static TextGameObject* create(cocos2d::CCTexture2D * texture) {
+		auto obj = TextGameObject::create(texture);
+		if (obj) {
+			obj->m_addToNodeContainer = true;
+		}
+		return obj;
+	}
+	void customObjectSetup(gd::vector<gd::string>&p0, gd::vector<void*>&p1) {
+		TextGameObject::customObjectSetup(p0, p1);
+		trySetupCustomSprite();
+	}
+	void updateTextObject(gd::string p0, bool p1) {
+		if (auto editor = GameManager::get()->m_levelEditorLayer) {
+			if (auto ui = editor->m_editorUI)
+				if (Ref sel = typeinfo_cast<TextGameObject*>(
+					ui->m_selectedObject
+				)) {
+					if (sel.data() != this) p0 = sel->m_text;
+				};
+		}
+		TextGameObject::updateTextObject(p0, p1);
+		if (this) unschedule(schedule_selector(TextGameObjectImageExt::trySetupCustomSprite));
+		if (this) scheduleOnce(schedule_selector(TextGameObjectImageExt::trySetupCustomSprite), 0.01f);
+	}
+};
