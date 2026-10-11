@@ -369,7 +369,7 @@ inline void SetupObjects() {
 					"<cg>mod:{id}</c> to link to another Geode mod." "\n"
 					"Or a external link from the internet." "\n"
 					"But, the one rule you should follow for safety for everyone," "\n"
-					"<cr>Don't put links to Viruses or Pornhub or anything that is bad.</c>";
+					"<cr>Don't put links that contained NSFW or Viruses.</c>";
 			}
 
 			auto input = TextInput::create(312.f, "", "chatFont.fnt");
