@@ -524,6 +524,60 @@ inline void SetupObjects() {
 	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-fakecrash-p1"), "plr-fakecrash-player1.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->playDeathEffect();
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-fakecrash-p2"), "plr-fakecrash-player2.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player2) a->playDeathEffect();
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-disappeareffect-p1"), "plr-disappeareffect-p1.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->playExitDualEffect(player);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-disappeareffect-p2"), "plr-disappeareffect-p2.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player2) a->playExitDualEffect(player);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-dual-on"), "plr-dual-on.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleDualMode(object, true, player, true);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
+		UNIQ_ID("plr-dual-off"), "plr-dual-off.png",
+		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
+		{
+			if (!game) return;
+			if (auto a = game->m_player1) a->toggleDualMode(object, false, player, true);
+		}
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createTriggerConfig(
 		UNIQ_ID("plr-speed2"), "plr-speed-normal.png",
 		[](EffectGameObject* trigger, GJBaseGameLayer* game, int p1, gd::vector<int> const* p2)
 		{
@@ -791,11 +845,15 @@ inline void SetupObjects() {
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2block-bluePixel"), "tig2block-bluePixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2blockNeon"), "tig2blockNeon.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikePixel"), "tig2spikePixel.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikePixelsmall"), "tig2spikePixelsmall.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spike-light"), "tig2spike-light.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
+
+	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikeNeon"), "tig2spikeNeon.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createDecorationObjectConfig(UNIQ_ID("tig2spikeRuby"), "tig2spikeRuby.png")->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
