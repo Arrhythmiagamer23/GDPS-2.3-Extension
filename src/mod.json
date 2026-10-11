@@ -1,0 +1,135 @@
+{
+	"geode": "5.11.1",
+	"early-load": true,
+	"gd": {
+		"win": "2.2081",
+		"android": "2.2081",
+		"mac": "2.2081",
+		"ios": "2.2081"
+	},
+	"id": "roadhogstudios.reminafeatures",
+	"name": "2point3 Features",
+	"version": "v2.9.0",
+	"developers": [ "lil2kki", "Arrhythmiagamer23" ],
+	"description": "https://remina.ps.fhgdps.com/",
+	"links": {
+		"source": "https://github.com/Arrhythmiagamer23/GDPS-2.3-Extension"
+	},
+	"dependencies": {
+		"geode.node-ids": {
+			"version": ">=v1.23.3",
+			"required": false
+		},
+		"prevter.imageplus": {
+			"version": ">=v1.0.3",
+			"required": false
+		},
+		"uproxide.happy_textures": {
+			"version": ">=v2.1.14",
+			"required": false
+		},
+		"iandyhd3.infinite_inputs": {
+			"version": ">=v1.0.0",
+			"required": false
+		},
+		"cvolton.misc_bugfixes": {
+			"version": ">=v1.0.0",
+			"required": false
+		},
+		"roadhogstudios.game-objects-factory-extended": {
+			"version": ">=v1.9.1",
+			"required": true
+		}
+	},
+	"resources": {
+		"files": [
+			"resources/*.zip"
+		],
+		"sprites": [
+			"assets/sprites/**/**/*.png"
+		],
+		"spritesheets": {
+			"spritesheet": [
+				"assets/frames/**/**/*.png"
+			]
+		}
+	},
+	"settings": {
+		"redir request urls": {
+			"name": "redir request urls",
+			"description": "replace boomlings.com/database with the our server url in all requests",
+			"type": "bool",
+			"default": false
+		},
+		"label alarm": {
+			"name": "the label alarm",
+			"description": "try not to turn it on, i don't know what does this do.",
+			"type": "bool",
+			"default": false
+		},
+		"past": {
+			"name": "past",
+			"description": "things was better then ya?",
+			"type": "bool",
+			"default": false
+		},
+		"wildcards-section": {
+			"name": "Wild cards",
+			"description": "With each wildcard, you can disable randomization for a specific vehicle type",
+			"type": "title"
+		},
+		"wildcard1": {
+			"name": "Wild card 1",
+			"type": "string",
+			"default": "None",
+			"one-of": [ "None", "Cube", "Ship", "Ball", "Ufo", "Wave", "Robot", "Spider", "Swing" ]
+		},
+		"wildcard2": {
+			"name": "Wild card 2",
+			"type": "string",
+			"default": "None",
+			"one-of": [ "None", "Cube", "Ship", "Ball", "Ufo", "Wave", "Robot", "Spider", "Swing" ]
+		},
+		"wildcard3": {
+			"name": "Wild card 3",
+			"type": "string",
+			"default": "None",
+			"one-of": [ "None", "Cube", "Ship", "Ball", "Ufo", "Wave", "Robot", "Spider", "Swing" ]
+		},
+		"wildcard4": {
+			"name": "Wild card 4",
+			"type": "string",
+			"default": "None",
+			"one-of": [ "None", "Cube", "Ship", "Ball", "Ufo", "Wave", "Robot", "Spider", "Swing" ]
+		},
+		"Extras-section": {
+			"name": "Extras",
+			"description": "A few extra options to make the experience even more enjoyable :D",
+			"type": "title"
+		},
+		"easyMode": {
+			"name": "Easy Mode",
+			"description": "This option gives the chance to 50% to stay all portals in the original portal",
+			"type": "bool",
+			"default": false
+		},
+		"freeMode": {
+			"name": "Free Fly Mode",
+			"description": "This option gives the option to make the camera free in the game",
+			"type": "bool",
+			"default": false
+		},
+		"enable-in-editor": {
+			"name": "Enable random textures in editor",
+			"description": "This option enable the texture randomization in the editor",
+			"type": "bool",
+			"default": false
+		},
+		"disableBlending": {
+			"name": "Disable Portal Bleding",
+			"description": "This removes the blending for the portal particules",
+			"type": "bool",
+			"default": false
+		}
+	}
+}
