@@ -539,7 +539,7 @@ inline void SetupObjects() {
 			if (!game) return;
 			if (auto a = game->m_player2) a->playDeathEffect();
 		}
-	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();s
+	)->customSetup([](auto a) { a->m_addToNodeContainer = true; })->registerMe();
 
 	GameObjectsFactory::createTriggerConfig(
 		UNIQ_ID("plr-speed2"), "plr-speed-normal.png",
