@@ -1,7 +1,10 @@
-# v2.9.0 - Neon Lights and Individual player explosions (Latest)
+# v2.9.1 - The Mistake that was meant to be fixed (Latest)
+I added Mini Orb sprite because it was not included in the repository and added the orange pad.
+
+# v2.9.0 - Neon Lights and Individual player explosions (Previous Update)
 Added Neon Blocks/Spikes and individual player explosion effects.
 
-# v2.8.0 - Refurbished Graphics in the go (Previous Update)
+# v2.8.0 - Refurbished Graphics in the go
 Updated the Image/Label Feature to the latest version.
 
 # v2.7.0 - The Grand Return of the ReverseDir Trigger
