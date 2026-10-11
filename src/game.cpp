@@ -369,7 +369,7 @@ inline void SetupObjects() {
 					"<cg>mod:{id}</c> to link to another Geode mod." "\n"
 					"Or a external link from the internet." "\n"
 					"But, the one rule you should follow for safety for everyone," "\n"
-					"<cr>Don't put links that contained NSFW or Viruses.</c>";
+					"<cr>Don't put links to Viruses or Pornhub or anything that is bad.</c>";
 			}
 
 			auto input = TextInput::create(312.f, "", "chatFont.fnt");
@@ -1499,7 +1499,23 @@ inline void SetupObjects() {
             UNIQ_ID("DropPad"),
             "DropPad.png",
             [](EnhancedGameObject* object, PlayerObject* plr) {
-                plr->boostPlayer(-8); log::info("activated by player, {}, {}", object, plr);
+                plr->flipGravity(!plr->m_isUpsideDown, true); log::info("activated by player, {}, {}", object, plr);
+                plr->pushDown(); log::info("activated by player, {}, {}", object, plr);
+            }
+        )->customSetup(
+			[](GameObject* a) {
+				if (a) a->m_addToNodeContainer = true;
+			}
+		)
+    );
+
+	GameObjectsFactory::registerGameObject(
+        GameObjectsFactory::createPadConfig(
+            UNIQ_ID("OrangePad"),
+            "OrangePad.png",
+            [](EnhancedGameObject* object, PlayerObject* plr) {
+                plr->flipGravity(!plr->m_isUpsideDown, true); log::info("activated by player, {}, {}", object, plr);
+                plr->pushDown(); log::info("activated by player, {}, {}", object, plr);
             }
         )->customSetup(
 			[](GameObject* a) {
