@@ -9,7 +9,7 @@
 	},
 	"id": "roadhogstudios.reminafeatures",
 	"name": "2.3 Features",
-	"version": "v2.9.1",
+	"version": "v2.9.0",
 	"developers": [ "lil2kki", "Arrhythmiagamer23" ],
 	"description": "https://remina.ps.fhgdps.com/",
 	"links": {
@@ -35,6 +35,10 @@
 		"cvolton.misc_bugfixes": {
 			"version": ">=v1.0.0",
 			"required": false
+		},
+		"roadhogstudios.game-objects-factory-extended": {
+			"version": ">=v1.9.1",
+			"required": true
 		}
 	},
 	"resources": {
