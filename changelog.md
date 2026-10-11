@@ -1,5 +1,5 @@
-# v2.9.0 - Neon Lights, Effects on Dice (Latest)
-Added Neon Blocks/Spikes, Dual Mode Triggers, And Effects for the players.
+# v2.9.0 - Neon Lights and Individual player explosions (Latest)
+Added Neon Blocks/Spikes and individual player explosion effects.
 
 # v2.8.0 - Refurbished Graphics in the go (Previous Update)
 Updated the Image/Label Feature to the latest version.
