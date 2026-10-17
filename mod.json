@@ -1,5 +1,5 @@
 {
-	"geode": "5.11.1",
+	"geode": "5.11.2",
 	"early-load": true,
 	"gd": {
 		"win": "2.2081",
@@ -9,7 +9,7 @@
 	},
 	"id": "roadhogstudios.reminafeatures",
 	"name": "2point3 Features",
-	"version": "v2.9.1",
+	"version": "v2.9.2",
 	"developers": [ "lil2kki", "Arrhythmiagamer23" ],
 	"description": "https://remina.ps.fhgdps.com/",
 	"links": {
@@ -37,20 +37,28 @@
 			"required": false
 		},
 		"roadhogstudios.game-objects-factory-extended": {
-			"version": ">=v1.9.1",
+			"version": ">=v1.9.2",
 			"required": true
 		}
 	},
 	"resources": {
 		"files": [
+			"resources/*.ogg",
+			"resources/fonts/*.png",
+			"resources/fonts/*.fnt",
+			"resources/animated/*.gif",
 			"resources/*.zip"
 		],
 		"sprites": [
-			"assets/sprites/**/**/*.png"
+			"assets/sprites/**/**/*.png",
+			"resources/*.png"
 		],
 		"spritesheets": {
 			"spritesheet": [
 				"assets/frames/**/**/*.png"
+			],
+			"DeltaruneSheet": [
+				"resources/deltarune/*.png"
 			]
 		}
 	},
@@ -130,6 +138,57 @@
 			"description": "This removes the blending for the portal particules",
 			"type": "bool",
 			"default": false
+		},
+		"combat-section": {
+			"name": "DeltaDash Stuff",
+			"description": "This section contains settings from DeltaDash for this mod. adapted from DeltaDash from saritahhh. \n\nNot everything is implemented yet, but the main features are coming soon. \n\nThis section is still a work in progress, so expect more features to be added in the future.",
+			"type": "title"
+		},
+		"soul-title": {
+			"type": "title",
+			"name": "Soul Mode Settings",
+			"description": "Settings for the mod's 'Soul Mode' visual feature."
+		},
+		"enable-soul": {
+			"type": "bool",
+			"name": "Soul Mode",
+			"description": "Replaces the player icon with the soul.",
+			"default": false
+		},
+		"soulmode-keepat0rot": {
+			"type": "bool",
+			"name": "Soul Mode - Keep Soul Upright",
+			"description": "Keeps the Soul sprite upright (at 0 rotation) despite of your current gravity or gamemode. If disabled, the soul CAN flip in the Y axis, similar to, say, the Sans fight in Undertale.",
+			"default": false,
+			"enable-if": "enable-soul"
+		},
+		"soulmode-colormode": {
+			"type": "string",
+			"name": "Soul Mode - Color Mode",
+			"description": "Defines how to choose which colors to use for the soul on each gamemode. The 2 available modes are: \n\n- GD Color: Uses the Gamemode Portal Colors to color the soul. (So, cube will be green, ship will be pink, etc)\n- UTDR Color: Uses the Soul colors from UT/DR and applies the most fitting for your current gamemode to the soul.",
+			"default": "GD Color",
+			"one-of": ["GD Color", "UTDR Color"],
+			"enable-if": "enable-soul"
+		},
+		"soulmode-static-color": {
+			"type": "bool",
+			"name": "Soul Mode - Static Color",
+			"description": "Disables changing the soul color based on the current gamemode. If this is enabled, the soul will always use your P1 color.",
+			"default": false,
+			"enable-if": "enable-soul"
+		},
+		"enable-songlabel": {
+			"type": "bool",
+			"name": "Enable Song Label at level start",
+			"description": "Enables showing a label with the name of the currently playing song, similar to the one text that shows up ONCE in Deltarune chapter 1, showing 'Field of Hopes and Dreams'\n\nThis does not depend on the mod's soft-toggle, so u can disable the rest of the features and keep this enabled!",
+			"default": true
+		},
+		"songlabel-showartist": {
+			"type": "bool",
+			"name": "Song Label - Show Artist Name",
+			"description": "Shows the Artist's name in the Song label, like: 'Artist - Song Name' instead of only showing the Song's name.",
+			"default": true,
+			"enable-if": "enable-songlabel"
 		}
 	}
 }

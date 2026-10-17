@@ -14,6 +14,7 @@ GDL7u7: New decoration Textures for objects.
 BootDark: Final Dash Orb Object Sprites.
 OmegaFalcon: Spider Dash Orb Sprite.
 iArtie: Random Portals Mod stuff ported and turned into a custom object feature.
+Asterveila: DeltaDash Stuff Adapted (Not all of them).
 
 
 ## Why is it not in the geode index?
